@@ -58,20 +58,21 @@ pub fn health_uri() -> &'static str {
     "memory:health"
 }
 
-/// Parse mínimo para testes e handler futuro.
+/// Parse mínimo para handler URI e open bridge.
 pub fn parse_memory_uri(uri: &str) -> Result<BTreeMap<String, String>, String> {
     let rest = uri
         .strip_prefix("memory:")
         .ok_or_else(|| "URI não é memory:".to_string())?;
-    let (op, query) = rest
-        .split_once('?')
-        .ok_or_else(|| "URI memory: sem query".to_string())?;
     let mut map = BTreeMap::new();
-    map.insert("op".into(), op.to_string());
-    for pair in query.split('&') {
-        if let Some((k, v)) = pair.split_once('=') {
-            map.insert(k.to_string(), decode(v)?);
+    if let Some((op, query)) = rest.split_once('?') {
+        map.insert("op".into(), op.to_string());
+        for pair in query.split('&') {
+            if let Some((k, v)) = pair.split_once('=') {
+                map.insert(k.to_string(), decode(v)?);
+            }
         }
+    } else {
+        map.insert("op".into(), rest.to_string());
     }
     Ok(map)
 }
@@ -87,5 +88,11 @@ mod tests {
         assert_eq!(parsed.get("op").map(String::as_str), Some("remember"));
         assert_eq!(parsed.get("text").map(String::as_str), Some("boot ok"));
         assert_eq!(parsed.get("scope").map(String::as_str), Some("boot"));
+    }
+
+    #[test]
+    fn roundtrip_health_uri() {
+        let parsed = parse_memory_uri("memory:health").unwrap();
+        assert_eq!(parsed.get("op").map(String::as_str), Some("health"));
     }
 }

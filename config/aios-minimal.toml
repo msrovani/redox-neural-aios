@@ -59,6 +59,14 @@ path = "/scheme/memory/out/.keep"
 data = ""
 
 [[files]]
+path = "/scheme/memory/open/in/.keep"
+data = ""
+
+[[files]]
+path = "/scheme/memory/open/out/.keep"
+data = ""
+
+[[files]]
 path = "/usr/share/aios/qemu-guest-check.sh"
 data = """
 #!/usr/bin/env sh
@@ -66,9 +74,17 @@ set -eu
 export REDOX_MEMORY_BACKEND=scheme
 export REDOX_MEMORY_SCHEME_ROOT=/scheme/memory
 export REDOX_MEMORY_SCHEME_NATIVE=1
+export REDOX_OS_TARGET=1
+export REDOX_AIOS_CAPS=factory_exec,memory_recall,hitl_approve
 memory remember \"qemu boot ok\" --scope boot
 memory recall \"qemu\" --scope boot
-hermes \"/factory\"
+memory health || true
+hermes \"/factory\" || true
+hermes \"demo one\" || true
+hermes \"demo two\" || true
+hermes \"demo three\" || true
+hermes \"/evolve\" || true
+hermes \"/promote list\" || true
 grep -i \"Redox Neural AIOS\" /usr/lib/os-release
 echo qemu-guest-check-ok
 """

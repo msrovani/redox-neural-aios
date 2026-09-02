@@ -27,6 +27,9 @@ pub fn gate_response(text: &str) -> Option<String> {
     if !hitl_enabled() {
         return None;
     }
+    if let Some(msg) = agent_core::missing_scheme_grant(text) {
+        return Some(msg);
+    }
     match impact_level(text) {
         ImpactLevel::Critical => Some(i18n_core::t("hermes.hitl.blocked")),
         ImpactLevel::High => Some(i18n_core::t("hermes.hitl.high_impact")),

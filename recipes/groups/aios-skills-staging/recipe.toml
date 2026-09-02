@@ -1,0 +1,17 @@
+# Meta-pacote — skills WASM promovidas via Hermes (staging → cookbook)
+# Uso: cookbook build recipes/groups/aios-skills-staging
+
+[source]
+path = "."
+
+[build]
+template = "custom"
+script = """
+echo "aios-skills-staging: use sub-recipes em /usr/share/aios/recipes/skills-staging"
+mkdir -pv "$BUILD/usr/share/aios/recipes/skills-staging"
+"""
+
+[package]
+version = "0.1.0"
+authors = ["Redox Neural AIOS"]
+description = "Staging de skills WASM promovidas (Runtime App Factory)"

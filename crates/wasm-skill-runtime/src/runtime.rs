@@ -47,6 +47,19 @@ fn check_cap(state: &HostState, required: Cap) -> Result<(), Error> {
     Ok(())
 }
 
+fn read_wasm_str(caller: &wasmi::Caller<'_, HostState>, ptr: i32, len: i32) -> Result<String, Error> {
+    let Some(wasmi::Extern::Memory(mem)) = caller.get_export("memory") else {
+        return Err(Error::new("wasm: export memory ausente"));
+    };
+    let data = mem.data(caller);
+    let p = ptr as usize;
+    let l = (len as usize).min(4096);
+    if p.saturating_add(l) > data.len() {
+        return Err(Error::new("wasm: path fora de memory"));
+    }
+    String::from_utf8(data[p..p + l].to_vec()).map_err(|_| Error::new("wasm: path inválido"))
+}
+
 fn install_host_abi(linker: &mut Linker<HostState>) -> Result<(), WasmError> {
     linker
         .func_wrap(
@@ -95,9 +108,14 @@ fn install_host_abi(linker: &mut Linker<HostState>) -> Result<(), WasmError> {
         .func_wrap(
             "aios",
             "fs_read",
-            |caller: wasmi::Caller<'_, HostState>, _ptr: i32, _len: i32| -> Result<i32, Error> {
+            |caller: wasmi::Caller<'_, HostState>, path_ptr: i32, path_len: i32| -> Result<i32, Error> {
                 check_cap(caller.data(), CAP_FS)?;
-                Err(Error::new("aios::fs_read gated — scheme FS bridge pending"))
+                let path = read_wasm_str(&caller, path_ptr, path_len)?;
+                let meta = std::fs::metadata(&path).map_err(|e| Error::new(e.to_string()))?;
+                if !meta.is_file() {
+                    return Err(Error::new("aios::fs_read: não é arquivo"));
+                }
+                Ok(meta.len().min(i32::MAX as u64) as i32)
             },
         )
         .map_err(|_| "linker aios::fs_read")?;

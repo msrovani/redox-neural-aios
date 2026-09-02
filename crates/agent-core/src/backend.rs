@@ -78,7 +78,7 @@ fn memory_backend() -> BackendReport {
     BackendReport {
         component: "memory".into(),
         tier,
-        detail: format!("backend={backend} mode={label}"),
+        detail: format!("backend={backend} mode={label} caps={}", crate::cap_summary()),
     }
 }
 

@@ -1,7 +1,7 @@
 //! permission_gate — classificação HITL por impacto (ADR-001 mandamento 2).
-//! Mapeamento futuro: scheme capabilities Redox.
+//! Integrado com `scheme_caps` — grants via `REDOX_AIOS_CAPS`.
 
-#[derive(Clone, Copy, Debug, PartialEq, Eq, PartialOrd, Ord)]
+use crate::scheme_caps::{grant_active, GRANT_FACTORY, GRANT_HITL, GRANT_PKG_INSTALL};#[derive(Clone, Copy, Debug, PartialEq, Eq, PartialOrd, Ord)]
 pub enum ImpactLevel {
     Low,
     Medium,
@@ -90,6 +90,39 @@ pub fn gate_enabled() -> bool {
         .unwrap_or(true)
 }
 
+/// Grant scheme exigido para o nível de impacto (CapGate Fase 2).
+pub fn required_grant(level: ImpactLevel) -> Option<&'static str> {
+    match level {
+        ImpactLevel::Critical | ImpactLevel::High => Some(GRANT_HITL),
+        ImpactLevel::Medium => Some(GRANT_FACTORY),
+        ImpactLevel::Low => None,
+    }
+}
+
+/// Retorna mensagem se a ação exige grant ausente em `REDOX_AIOS_CAPS`.
+pub fn missing_scheme_grant(text: &str) -> Option<String> {
+    if !gate_enabled() {
+        return None;
+    }
+    let level = impact_level(text);
+    if !requires_hitl(level) {
+        return None;
+    }
+    let grant = required_grant(level)?;
+    if grant_active(grant) {
+        return None;
+    }
+    Some(format!("grant ausente: {grant} (REDOX_AIOS_CAPS)"))
+}
+
+/// Promoção de pacote exige grant explícito além de HITL textual.
+pub fn missing_pkg_grant() -> Option<String> {
+    if grant_active(GRANT_PKG_INSTALL) || grant_active(GRANT_HITL) {
+        return None;
+    }
+    Some(format!("grant ausente: {GRANT_PKG_INSTALL} (REDOX_AIOS_CAPS)"))
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -107,5 +140,16 @@ mod tests {
     #[test]
     fn classifies_benign_low() {
         assert_eq!(impact_level("que horas são"), ImpactLevel::Low);
+    }
+
+    #[test]
+    fn missing_grant_when_hitl_required() {
+        let prev = std::env::var("REDOX_AIOS_CAPS").ok();
+        std::env::set_var("REDOX_AIOS_CAPS", "factory_exec");
+        assert!(missing_scheme_grant("apt install foo").is_some());
+        match prev {
+            Some(v) => std::env::set_var("REDOX_AIOS_CAPS", v),
+            None => std::env::remove_var("REDOX_AIOS_CAPS"),
+        }
     }
 }

@@ -28,6 +28,10 @@ Copy-Tree (Join-Path $AiosRoot "config") (Join-Path $RedoxRoot "config")
 # Recipes
 Copy-Tree (Join-Path $AiosRoot "recipes\aios") (Join-Path $RedoxRoot "recipes\aios")
 Copy-Tree (Join-Path $AiosRoot "recipes\groups\aios") (Join-Path $RedoxRoot "recipes\groups\aios")
+Copy-Tree (Join-Path $AiosRoot "recipes\groups\aios-skills-staging") (Join-Path $RedoxRoot "recipes\groups\aios-skills-staging")
+
+# Tools (guest scripts, demos)
+Copy-Tree (Join-Path $AiosRoot "tools") (Join-Path $RedoxRoot "tools\aios")
 
 # Crates (necessario para path= nos recipes)
 Copy-Tree (Join-Path $AiosRoot "crates") (Join-Path $RedoxRoot "crates")
@@ -37,18 +41,8 @@ $docsDest = Join-Path $RedoxRoot "docs\aios"
 Copy-Tree (Join-Path $AiosRoot "docs") $docsDest
 
 # Makefile target hint
-$mkHint = @"
-
-# --- Redox AIOS targets (overlay) ---
-aios-minimal:
-	`$(MAKE) CONFIG_NAME=aios-minimal
-
-aios:
-	`$(MAKE) CONFIG_NAME=aios
-"@
-
 $mkPath = Join-Path $RedoxRoot "mk\aios.mk"
-Set-Content -Path $mkPath -Value $mkHint -Encoding UTF8
+Copy-Item -Path (Join-Path $AiosRoot "mk\aios.mk") -Destination $mkPath -Force
 
 # Incluir no Makefile principal se ainda nao estiver
 $makefile = Join-Path $RedoxRoot "Makefile"

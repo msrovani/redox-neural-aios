@@ -59,7 +59,13 @@ impl MemoryClient {
     fn rpc(&self, body: serde_json::Value) -> Result<serde_json::Value, String> {
         match self.backend {
             MemoryBackend::Tcp => tcp::rpc(&self.tcp_addr, body),
-            MemoryBackend::Scheme => scheme::rpc(body),
+            MemoryBackend::Scheme => {
+                if crate::scheme_native::scheme_native_enabled() {
+                    crate::scheme_open::rpc_body(body)
+                } else {
+                    scheme::rpc(body)
+                }
+            }
         }
     }
 

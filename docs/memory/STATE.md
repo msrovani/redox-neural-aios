@@ -11,14 +11,23 @@
 | Fase | Status host | Aceite OS |
 |------|-------------|-----------|
 | 0 | 🟡 overlay ✅, CI ✅ | ⏳ `make aios-minimal` (WSL) |
-| 1 | 🟡 scheme bridges + URI nativo | ⏳ handler open() Redox |
-| 2 | 🟡 HITL + CapGate scheme_caps | ⏳ caps nativas OS |
+| 1 | 🟡 scheme bridges + URI open/ | ⏳ handler open() kernel |
+| 2 | 🟡 HITL + CapGate grants CSV | ⏳ caps nativas OS |
 | 4 | 🟡 audio bridge + barge-in | ⏳ MIC nativo |
 | 5 | 🟡 i18n parcial | ⏳ liborbital |
 | 6 | ✅ demo-e2e.ps1 host | ⏳ demo gravável OS |
 | 7 | 🟡 Onda 7 + Fase 2 factory | ⏳ QEMU escada gravável |
 
-**Próximo:** handler `memory:` nativo + QEMU E2E completo.
+**Próximo:** handler `open()` kernel Redox + QEMU E2E gravável.
+
+## Fase 2b (URI bridge)
+
+- [x] `memory-core/scheme_open` — canal `open/in/*.uri`
+- [x] `sgdbd` watcher URI + `REDOX_MEMORY_SCHEME_NATIVE=1`
+- [x] `permission_gate` ↔ `REDOX_AIOS_CAPS`
+- [x] `wasm fs_read` — metadata gated (CAP_FS)
+- [x] `recipes/groups/aios-skills-staging`
+- [x] `verify-stack` teste URI + `demo-qemu -FullLadder`
 
 ## Escada cognitiva (ADR-010 revisada)
 

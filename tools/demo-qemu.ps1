@@ -1,10 +1,10 @@
-# Demo QEMU E2E — Redox Neural AIOS (Fase 0 aceite + smoke guest).
+# Demo QEMU E2E — Redox Neural AIOS (Fase 0 aceite + smoke guest + escada).
 param(
     [switch]$BuildOnly,
     [switch]$SkipBuild,
+    [switch]$FullLadder,
     [string]$RedoxRoot = ""
 )
-
 $ErrorActionPreference = "Stop"
 $AiosRoot = Split-Path -Parent $PSScriptRoot
 Set-Location $AiosRoot
@@ -48,5 +48,12 @@ Write-Host "`n[3/3] Host verify (pre-QEMU)" -ForegroundColor Yellow
 & (Join-Path $AiosRoot "tools\verify-stack.ps1")
 if ($LASTEXITCODE -ne 0) { throw "verify-stack falhou" }
 
+if ($FullLadder) {
+    Write-Host "`n[extra] Host escada completa (baseline)" -ForegroundColor Yellow
+    & (Join-Path $AiosRoot "tools\demo-ladder.ps1") -WithNet -FullLadder
+    if ($LASTEXITCODE -ne 0) { throw "demo-ladder falhou" }
+}
+
 Write-Host "`n=== Demo QEMU preparada ===" -ForegroundColor Green
-Write-Host "Aceite: PRETTY_NAME contém 'Redox Neural AIOS' + memory scheme + hermes /factory no guest."
+Write-Host "Aceite guest: sh /usr/share/aios/qemu-guest-check.sh"
+Write-Host "Aceite gravável: memory URI + hermes /factory + /evolve + /promote list"
