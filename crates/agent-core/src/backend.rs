@@ -55,16 +55,30 @@ pub fn collect_stack_backends() -> Vec<BackendReport> {
 }
 
 fn memory_backend() -> BackendReport {
-    let backend = std::env::var("REDOX_MEMORY_BACKEND").unwrap_or_else(|_| "tcp".into());
-    let tier = match backend.to_ascii_lowercase().as_str() {
-        "scheme" | "memory" => BackendTier::Degraded,
-        "tcp" => BackendTier::Degraded,
-        _ => BackendTier::Stub,
+    let native = std::env::var("REDOX_MEMORY_SCHEME_NATIVE")
+        .map(|v| v == "1" || v.eq_ignore_ascii_case("true"))
+        .unwrap_or(false);
+    let backend = std::env::var("REDOX_MEMORY_BACKEND").unwrap_or_else(|_| {
+        if native {
+            "scheme".into()
+        } else {
+            "tcp".into()
+        }
+    });
+    let label = memory_core::backend_label();
+    let tier = if native {
+        BackendTier::Degraded
+    } else {
+        match backend.to_ascii_lowercase().as_str() {
+            "scheme" | "memory" => BackendTier::Degraded,
+            "tcp" => BackendTier::Degraded,
+            _ => BackendTier::Stub,
+        }
     };
     BackendReport {
         component: "memory".into(),
         tier,
-        detail: format!("backend={backend} (file/tcp bridge host)"),
+        detail: format!("backend={backend} mode={label}"),
     }
 }
 

@@ -434,8 +434,12 @@ impl HermesRouter {
 
         match skill {
             Ok(s) => match promote_skill_to_recipe(&s, hitl_approved) {
-                Ok(path) => {
-                    let msg = format!("recipe cookbook staged: {}", path.display());
+                Ok(result) => {
+                    let msg = format!(
+                        "recipe staged: {}\n{}",
+                        result.recipe_path.display(),
+                        result.pkgutils_cmd
+                    );
                     emit_factory_stage(
                         Some(&self.events),
                         FactoryPhase::Act,

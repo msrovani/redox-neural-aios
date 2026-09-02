@@ -56,7 +56,7 @@ Não pular fase. Hardening e integração QEMU vêm **antes** de features novas 
 | `agent-core`, `event-bus`, `skill-registry` | ✅ |
 | `sgdbd` + neural-sgdb + CLI `memory` | ✅ |
 | `eventd` + BOOT_PHASE | ✅ |
-| Scheme `memory:` nativo | ⏳ |
+| Scheme `memory:` nativo | 🟡 prep URI + profile.d |
 | Scheme `memory:` file bridge | ✅ `memory-core` + sgdbd watcher |
 | EventBus → scheme `chan:` | ✅ `event-bus/chan` + eventd |
 | Agent wrappers (net, input) | ⏳ |
@@ -74,7 +74,7 @@ Não pular fase. Hardening e integração QEMU vêm **antes** de features novas 
 | Boot observer stub → SGDB | 🟡 |
 | HITL gate destrutivo | 🟡 stub |
 | MCP server | ⏳ |
-| `permission_gate` via capabilities | ⏳ |
+| `permission_gate` via capabilities | 🟡 `scheme_caps` + `REDOX_AIOS_CAPS` (host) |
 
 **Aceite:** intent texto → skill ou LLM; ação destrutiva bloqueada com HITL.
 
@@ -159,8 +159,8 @@ Ver [ADR-004](architecture/ADR-004-jarbas-ui-strategy.md).
 | `skill_observer` + `self_evolve` | ✅ |
 | Skill `/factory` self-test | ✅ |
 | Geração WAT via cortexd (op-IR) | ⏳ Onda 7g |
-| Recipe wasmi overlay Redox | ⏳ Onda 7e |
-| Bridge cookbook promoção | ⏳ Onda 7f |
+| Recipe wasmi overlay Redox | 🟡 template + staging |
+| Bridge cookbook promoção | 🟡 HITL + `REDOX_COOKBOOK_BUILD=1` |
 | Boot observability (placar parseável) | 🟡 |
 | SelfHeal / OTA skeleton | ⏳ |
 | **ISO `aios-v0.1.0`** | ⏳ |
@@ -179,8 +179,8 @@ Paralela à Fase 7, conforme [ADR-010](architecture/ADR-010-runtime-app-factory.
 | **7b** | `DynamicSkill` hot-load | ✅ |
 | **7c** | `skill_observer` + SGDB usage (host) | ✅ |
 | **7d** | `self_evolve` + router integration | ✅ |
-| **7e** | Recipe wasmi no overlay Redox | ⏳ |
-| **7f** | Bridge cookbook (promoção HITL) | ⏳ |
+| **7e** | Recipe wasmi no overlay Redox | 🟡 template `_template` |
+| **7f** | Bridge cookbook (promoção HITL) | 🟡 pkgutils opt-in |
 | **7g** | cortexd → WAT/op-IR | 🟡 |
 | **7h** | `skill_gen` → SKILL.md (degrau 1) | ✅ |
 | **7i** | Pipeline efêmera + tool registry (genérico) | ✅ |

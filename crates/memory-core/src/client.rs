@@ -21,6 +21,9 @@ impl MemoryBackend {
     }
 
     pub fn from_env() -> Self {
+        if crate::scheme_native::scheme_native_enabled() {
+            return MemoryBackend::Scheme;
+        }
         std::env::var("REDOX_MEMORY_BACKEND")
             .map(|v| Self::parse(&v))
             .unwrap_or(Self::Tcp)

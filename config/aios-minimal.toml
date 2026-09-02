@@ -51,6 +51,41 @@ path = "/var/lib/sgdb/.keep"
 data = ""
 
 [[files]]
+path = "/scheme/memory/in/.keep"
+data = ""
+
+[[files]]
+path = "/scheme/memory/out/.keep"
+data = ""
+
+[[files]]
+path = "/usr/share/aios/qemu-guest-check.sh"
+data = """
+#!/usr/bin/env sh
+set -eu
+export REDOX_MEMORY_BACKEND=scheme
+export REDOX_MEMORY_SCHEME_ROOT=/scheme/memory
+export REDOX_MEMORY_SCHEME_NATIVE=1
+memory remember \"qemu boot ok\" --scope boot
+memory recall \"qemu\" --scope boot
+hermes \"/factory\"
+grep -i \"Redox Neural AIOS\" /usr/lib/os-release
+echo qemu-guest-check-ok
+"""
+
+[[files]]
+path = "/etc/profile.d/aios-env.sh"
+data = """
+export REDOX_MEMORY_BACKEND=scheme
+export REDOX_MEMORY_SCHEME_ROOT=/scheme/memory
+export REDOX_MEMORY_SCHEME_NATIVE=1
+export REDOX_OS_TARGET=1
+export REDOX_AIOS_CAPS=factory_exec,memory_recall
+export REDOX_SKILLS_DIR=/var/lib/aios/skills
+export REDOX_RECIPES_STAGING=/usr/share/aios/recipes/skills-staging
+"""
+
+[[files]]
 path = "/etc/aios/factory.toml"
 data = """
 # Runtime App Factory — defaults Redox Neural AIOS (ADR-010)
@@ -60,6 +95,7 @@ hitl = true
 tools_net = false
 factory_caps = true
 memory_backend = "scheme"
+memory_scheme_native = true
 """
 
 [[files]]

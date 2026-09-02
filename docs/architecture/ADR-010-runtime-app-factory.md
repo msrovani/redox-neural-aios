@@ -261,7 +261,11 @@ jarbasd → voiced:7744 → hermesd:7742 → [escada acima] → voiced TTS → j
 - [x] `skill_gen` + SKILL.md (7h)
 - [x] Pipeline efêmero + tool registry (7i — genérico, providers plugáveis)
 - [x] Provider HTTP exemplo `open_meteo` (opt-in `REDOX_TOOLS_NET=1` + `REDOX_TOOLS_PROVIDERS`)
-- [ ] QEMU E2E skill dinâmica
+- [x] CapGate → `scheme_caps` + `REDOX_AIOS_CAPS` (Fase 2 host)
+- [x] Cookbook `pkgutils_build_command` + `REDOX_COOKBOOK_BUILD=1`
+- [x] `demo-qemu.ps1` + guest check script
+- [ ] Handler scheme `memory:` open() nativo
+- [ ] QEMU E2E escada gravável
 
 ### Variáveis — pipeline efêmero (7i)
 

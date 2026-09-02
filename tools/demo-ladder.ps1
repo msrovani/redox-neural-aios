@@ -2,7 +2,8 @@
 # Exemplo de usabilidade: mesma intent 3× → SKILL.md; providers HTTP opcionais.
 param(
     [string]$Intent = "qual a temperatura em sp",
-    [switch]$WithNet
+    [switch]$WithNet,
+    [switch]$FullLadder
 )
 
 $ErrorActionPreference = "Stop"
@@ -49,5 +50,11 @@ cargo run -q -p hermesd --bin hermes -- $Intent
 Write-Host "`n[tools] registry" -ForegroundColor Yellow
 cargo run -q -p hermesd --bin hermes -- "/tools"
 
+if ($FullLadder) {
+    Write-Host "`n[5] WASM maduro (simula runs) + promote staging" -ForegroundColor Yellow
+    Write-Host "Requer skill em WasmPersistent — use após runs reais ou testes integração." -ForegroundColor DarkGray
+    cargo run -q -p hermesd --bin hermes -- "/promote list"
+}
+
 Write-Host "`n=== Demo escada concluída ===" -ForegroundColor Green
-Write-Host "Próximo: runs maduros → WASM; /promote <skill> approve → app wasmi (HITL)."
+Write-Host "Próximo: /promote <skill> approve (REDOX_AIOS_CAPS=pkg_install); QEMU: .\tools\demo-qemu.ps1"

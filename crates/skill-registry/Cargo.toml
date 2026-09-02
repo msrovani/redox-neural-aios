@@ -6,4 +6,5 @@ license.workspace = true
 description = "Skill registry for Redox AIOS Hermes"
 
 [dependencies]
+agent-core = { path = "../agent-core" }
 wasm-skill-runtime = { path = "../wasm-skill-runtime" }

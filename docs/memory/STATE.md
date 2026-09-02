@@ -11,14 +11,14 @@
 | Fase | Status host | Aceite OS |
 |------|-------------|-----------|
 | 0 | 🟡 overlay ✅, CI ✅ | ⏳ `make aios-minimal` (WSL) |
-| 1 | 🟡 scheme bridges ✅ | ⏳ handler nativo |
-| 2 | 🟡 HITL + boot score ✅ | ⏳ QEMU |
+| 1 | 🟡 scheme bridges + URI nativo | ⏳ handler open() Redox |
+| 2 | 🟡 HITL + CapGate scheme_caps | ⏳ caps nativas OS |
 | 4 | 🟡 audio bridge + barge-in | ⏳ MIC nativo |
 | 5 | 🟡 i18n parcial | ⏳ liborbital |
 | 6 | ✅ demo-e2e.ps1 host | ⏳ demo gravável OS |
-| 7 | 🟡 Onda 7 — escada + factory AIOS-aligned | ⏳ promote E2E + QEMU |
+| 7 | 🟡 Onda 7 + Fase 2 factory | ⏳ QEMU escada gravável |
 
-**Próximo:** promote E2E gravável → ISO v0.1.
+**Próximo:** handler `memory:` nativo + QEMU E2E completo.
 
 ## Escada cognitiva (ADR-010 revisada)
 
@@ -29,10 +29,11 @@ Exemplo *"qual a temperatura?"*: efêmera (1ª) → skill (3×) → wasm (runs m
 | 0 Efêmera ReAct+tools+SGDB | ✅ pipeline genérico + providers plugáveis |
 | 1 SKILL.md | ✅ 7h |
 | 2 WASM wasmi | 🟡 op-IR + boot reload |
-| 3 App cookbook | 🟡 HITL + staging recipe |
+| 3 App cookbook | 🟡 HITL + pkgutils build opt-in |
 
 ## Entregas recentes
 
+- [x] **Fase 2 factory** — scheme URI/native prep, `scheme_caps`, cookbook pkgutils, `demo-qemu.ps1`
 - [x] **Factory AIOS-aligned** — boot reload skills, ciclo O-P-A-V-R, eventos FACTORY_*, i18n, caps WASM
 - [x] **Onda 7i** — pipeline efêmero + tool registry + providers HTTP (`REDOX_TOOLS_PROVIDERS`)
 - [x] `tools/demo-ladder.ps1` — demo escada (3× intent → SKILL.md)
@@ -49,8 +50,9 @@ Exemplo *"qual a temperatura?"*: efêmera (1ª) → skill (3×) → wasm (runs m
 ```powershell
 .\tools\verify-stack.ps1
 .\tools\demo-e2e.ps1
-.\tools\demo-ladder.ps1 -WithNet   # escada ADR-010 (ex.: temperatura)
-.\tools\start-stack.ps1 -KeepStack   # via demo -KeepStack
+.\tools\demo-ladder.ps1 -WithNet
+.\tools\demo-qemu.ps1          # build ISO + smoke guest
+.\tools\start-stack.ps1 -KeepStack
 ```
 
 ## Stack

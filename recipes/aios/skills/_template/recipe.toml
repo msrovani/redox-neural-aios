@@ -1,0 +1,11 @@
+# Template recipe — skills WASM promovidas pela factory (copiar e preencher).
+
+[source]
+path = "."
+
+[build]
+template = "custom"
+script = """
+mkdir -pv "$BUILD/usr/lib/aios/skills"
+cp "$SRC/SKILL_NAME.wasm" "$BUILD/usr/lib/aios/skills/"
+"""

@@ -60,13 +60,14 @@ O Redox AIOS precisa de memória cognitiva persistente para agentes (boot observ
 | `REDOX_MEMORY_SCHEME_ROOT` | `/scheme/memory` | Diretório in/out |
 | `REDOX_SGDB_SCHEME` | `1` | Watcher no sgdbd (`0` desliga) |
 
-### Fase 2 — scheme `memory:` nativo Redox (planejado)
+### Fase 2 — scheme `memory:` nativo Redox (em progresso)
 
-Implementar handler Redox scheme com operações:
-
-- `memory:remember?text=...&scope=...`
-- `memory:recall?query=...&scope=...`
-- `memory:health`
+| Componente | Função | Estado |
+|------------|--------|--------|
+| `memory-core/scheme_uri.rs` | URIs `memory:remember/recall/health` | ✅ contrato |
+| `memory-core/scheme_native.rs` | Bridge até handler nativo | ✅ |
+| `REDOX_MEMORY_SCHEME_NATIVE=1` | Default no target via factory.toml | ✅ config |
+| Handler scheme Redox userspace | `open(memory:…)` → sgdbd | ⏳ upstream |
 
 Bridge do scheme para o mesmo `SgdbService` interno do `sgdbd`.
 
@@ -90,8 +91,9 @@ DEV/
 - [x] Teste `remember_recall_roundtrip`
 - [x] Doctrine seed no primeiro boot (L3 lexical)
 - [x] `memory-core` + bridge scheme file (Fase 1b)
-- [ ] scheme `memory:` handler nativo Redox (Fase 2)
-- [ ] Persistência validada no Redox QEMU
+- [x] `memory-core/scheme_uri` + `scheme_native` (contrato Fase 2)
+- [ ] scheme `memory:` handler nativo Redox (open URI)
+- [ ] Persistência validada no Redox QEMU (`tools/demo-qemu.ps1`)
 
 ## Apreciação ADR-001
 

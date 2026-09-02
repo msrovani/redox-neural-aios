@@ -43,10 +43,12 @@ Alinhar a fábrica de apps efêmeras/definitivas às premissas Redox Neural AIOS
 
 ## Pendências (honestas)
 
-- Scheme `memory:` nativo no target
-- CapGate → scheme capabilities Redox (Fase 2)
-- Build cookbook automático (pkgutils)
-- QEMU E2E escada completa
+- Handler scheme `memory:` nativo Redox (`open()` upstream)
+- CapGate → capabilities nativas OS (não só env CSV host)
+- `cookbook build` validado no WSL/Redox real
+- QEMU E2E escada gravável (efêmera → skill → WASM → recipe)
+
+Ver [SESSION-2026-09-02-fase2-factory.md](SESSION-2026-09-02-fase2-factory.md).
 
 ## Demo
 

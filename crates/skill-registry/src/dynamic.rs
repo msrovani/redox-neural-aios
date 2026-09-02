@@ -2,7 +2,7 @@
 
 use std::path::PathBuf;
 
-use wasm_skill_runtime::{run_i32_0, CAP_LOG, CAP_NONE};
+use wasm_skill_runtime::run_i32_0;
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum SkillStage {
@@ -131,11 +131,7 @@ impl DynamicSkill {
 
     pub fn execute(&self, input: &str) -> Result<String, String> {
         if let Some(wasm) = &self.wasm {
-            let caps = if factory_caps_enabled() {
-                CAP_LOG
-            } else {
-                CAP_NONE
-            };
+            let caps = agent_core::wasm_caps_from_grants();
             let out = run_i32_0(wasm, &self.export_fn, caps)
                 .map_err(|e| format!("wasm skill {}: {}", self.name, e.0))?;
             return Ok(format!(
