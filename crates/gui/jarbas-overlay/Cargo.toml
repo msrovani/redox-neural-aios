@@ -1,0 +1,15 @@
+[package]
+name = "jarbas-overlay"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+description = "Jarbas HUD overlay — Onda B COSMIC/Orbital (terminal flutuante)"
+
+[[bin]]
+name = "jarbas-overlay"
+path = "src/main.rs"
+
+[dependencies]
+jarbas-core = { path = "../../jarbas-core" }
+serde = { version = "1" }
+serde_json = "1"

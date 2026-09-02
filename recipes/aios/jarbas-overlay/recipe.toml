@@ -1,0 +1,6 @@
+[source]
+path = "../../../crates/gui/jarbas-overlay"
+
+[build]
+template = "cargo"
+cargopackages = ["jarbas-overlay"]

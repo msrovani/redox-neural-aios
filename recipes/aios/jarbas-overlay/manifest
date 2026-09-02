@@ -1,0 +1,7 @@
+name=JARBAS Overlay
+desc=HUD AI flutuante — Soul Mirror + chat Falcon3
+author=Redox AIOS
+exec=/bin/jarbas-overlay
+icon=jarbas
+terminal=true
+category=Utility

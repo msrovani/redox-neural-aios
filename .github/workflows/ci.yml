@@ -1,0 +1,25 @@
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Checkout neural-sgdb
+        run: |
+          git clone --depth 1 https://github.com/msrovani/neural-sgdb.git ../neural-sgdb || true
+
+      - uses: dtolnay/rust-toolchain@stable
+
+      - name: cargo test
+        run: cargo test --workspace
+
+      - name: cargo check daemons
+        run: cargo check --workspace

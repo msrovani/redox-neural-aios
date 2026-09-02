@@ -1,0 +1,28 @@
+# Configuração do cortexd — Falcon3-3B-Instruct (padrão Redox Neural AIOS)
+
+[model]
+id = "tiiuae/Falcon3-3B-Instruct"
+# Qualidade (default v0.1)
+file = "Falcon3-3B-Instruct-Q4_K_M.gguf"
+relative_path = "models/Falcon3-3B-Instruct-Q4_K_M.gguf"
+backend = "llama-cpp"  # llama-cpp | bitnet | auto
+
+[model.lite]
+# Variante 1.58bit (opcional, menor RAM)
+file = "ggml-model-i2_s.gguf"
+relative_path = "models/Falcon3-3B-Instruct-1.58bit/ggml-model-i2_s.gguf"
+backend = "bitnet"
+
+[inference]
+max_tokens = 256
+temperature = 0.7
+system_prompt = """
+You are JARBAS, the AI assistant of Redox Neural AIOS. You are helpful, witty, and concise.
+Respond in the user's language (pt-BR or en-US).
+"""
+
+[env]
+# REDOX_CORTEX_MODEL — caminho absoluto do .gguf
+# REDOX_CORTEX_BACKEND — llama-cpp | bitnet | auto | stub
+# REDOX_LLAMA_CLI — llama-cli (default qualidade)
+# REDOX_BITNET_DIR — BitNet (variante 1.58bit)

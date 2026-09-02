@@ -1,0 +1,147 @@
+# Redox Neural AIOS — configuração mínima para boot com daemons cognitivos
+# Jarbas comanda o desktop; COSMIC apps convivem no launcher (ADR-009)
+
+include = ["desktop-minimal.toml"]
+
+[general]
+filesystem_size = 512
+hostname = "redox-neural-aios"
+
+[packages]
+eventd = {}
+sgdbd = {}
+hermesd = {}
+cortexd = {}
+voiced = {}
+jarbasd = {}
+jarbas-overlay = {}
+aios = {}
+
+[[files]]
+path = "/usr/lib/os-release"
+data = """
+PRETTY_NAME="Redox Neural AIOS 0.1.0"
+NAME="Redox Neural AIOS"
+ID=redox-neural-aios
+ID_LIKE=redox
+VERSION_ID=0.1.0
+HOME_URL="https://github.com/msrovani/redox-neural-aios"
+DOCUMENTATION_URL="https://gitlab.redox-os.org"
+SUPPORT_URL="https://github.com/msrovani/redox-neural-aios/issues"
+"""
+
+[[files]]
+path = "/etc/jarbas/soul.toml"
+data = """
+name = "JARBAS"
+tone = "witty"
+humor_level = 0.5
+formality = 0.3
+empathy = 0.8
+wake_word = "jarbas"
+language = "pt-BR"
+llm = "falcon3-3b-instruct"
+cortex_socket = "127.0.0.1:7743"
+jarbas_socket = "127.0.0.1:7745"
+desktop = "jarbas+cosmic"
+"""
+
+[[files]]
+path = "/var/lib/sgdb/.keep"
+data = ""
+
+[[files]]
+path = "/scheme/memory/.keep"
+data = ""
+
+[[files]]
+path = "/scheme/chan/.keep"
+data = ""
+
+[[files]]
+path = "/scheme/audio/mic/.keep"
+data = ""
+
+[[files]]
+path = "/scheme/audio/spk/.keep"
+data = ""
+
+[[files]]
+path = "/scheme/audio/vad/.keep"
+data = ""
+
+[[files]]
+path = "/usr/share/ui/apps/20_jarbas-overlay"
+data = """
+name=JARBAS Overlay
+desc=HUD AI — Jarbas comanda; COSMIC convive
+author=Redox Neural AIOS
+exec=/bin/jarbas-overlay
+icon=jarbas
+terminal=true
+category=Utility
+"""
+
+[[files]]
+path = "/usr/lib/init.d/19_jarbas_overlay"
+data = """
+requires_weak 13_jarbasd
+requires_weak 20_orbital
+nowait jarbas-overlay
+"""
+
+[[files]]
+path = "/usr/lib/init.d/13_jarbasd"
+data = """
+requires_weak 10_hermesd
+requires_weak 12_voiced
+jarbasd
+"""
+
+[[files]]
+path = "/usr/lib/init.d/12_voiced"
+data = """
+requires_weak 10_hermesd
+requires_weak 11_cortexd
+voiced
+"""
+
+[[files]]
+path = "/usr/lib/init.d/11_cortexd"
+data = """
+requires_weak 09_sgdbd
+cortexd
+"""
+
+[[files]]
+path = "/usr/lib/init.d/10_hermesd"
+data = """
+requires_weak 09_sgdbd
+hermesd
+"""
+
+[[files]]
+path = "/usr/lib/init.d/08_eventd"
+data = """
+requires_weak 10_net.target
+eventd
+"""
+
+[[files]]
+path = "/usr/lib/init.d/09_sgdbd"
+data = """
+requires_weak 08_eventd
+sgdbd
+"""
+
+[[files]]
+path = "/usr/share/locale/pt-BR/redox-neural-aios.json"
+data = """
+{"jarbas.greeting":"Olá! Sou JARBAS, assistente do Redox Neural AIOS."}
+"""
+
+[[files]]
+path = "/usr/share/locale/en-US/redox-neural-aios.json"
+data = """
+{"jarbas.greeting":"Hello! I am JARBAS, assistant of Redox Neural AIOS."}
+"""

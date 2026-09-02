@@ -1,0 +1,13 @@
+[package]
+name = "event-bus"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+description = "EventBus pub/sub for Redox AIOS daemons"
+
+[lib]
+path = "src/lib.rs"
+
+[dependencies]
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"

@@ -1,0 +1,6 @@
+[source]
+path = "../../../crates/daemons/hermesd"
+
+[build]
+template = "cargo"
+cargopackages = ["hermesd", "hermes"]

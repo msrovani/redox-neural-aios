@@ -1,0 +1,9 @@
+[package]
+name = "agent-core"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+description = "Agent/Skill model for Redox AIOS daemons"
+
+[lib]
+path = "src/lib.rs"

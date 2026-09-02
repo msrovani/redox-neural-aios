@@ -1,0 +1,12 @@
+# Meta-pacote Redox AIOS — daemons cognitivos
+# Requer neural-sgdb em ../../../../neural-sgdb (irmão do repo redox-aios)
+[package]
+dependencies = [
+    "eventd",
+    "sgdbd",
+    "hermesd",
+    "cortexd",
+    "voiced",
+    "jarbasd",
+    "jarbas-overlay",
+]

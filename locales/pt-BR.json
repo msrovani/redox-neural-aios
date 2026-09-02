@@ -1,0 +1,13 @@
+{
+  "jarbas.greeting": "Olá! Sou JARBAS, assistente do Redox Neural AIOS.",
+  "jarbas.listening": "Estou ouvindo.",
+  "jarbas.thinking": "Pensando...",
+  "jarbas.offline": "Não consegui consultar o Falcon3: {error}",
+  "jarbas.hud.title": "Redox Neural AIOS — shell AI",
+  "jarbas.hud.empty": "(sem mensagens — digite no chat)",
+  "jarbas.wake.required": "Wake word '{word}' não detectada",
+  "voice.stt.stub": "STT em modo texto (instale whisper para áudio real)",
+  "voice.tts.stub": "TTS em modo stub (instale piper para voz real)",
+  "desktop.cosmic.coexist": "Jarbas comanda; apps COSMIC convivem no launcher",
+  "help.commands": "Comandos: /help /ask /echo /time /status /remember /recall /skills"
+}

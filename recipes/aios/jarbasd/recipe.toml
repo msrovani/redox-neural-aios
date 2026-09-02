@@ -1,0 +1,6 @@
+[source]
+path = "../../../crates/daemons/jarbasd"
+
+[build]
+template = "cargo"
+cargopackages = ["jarbasd", "jarbas"]

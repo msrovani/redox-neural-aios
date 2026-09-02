@@ -1,0 +1,20 @@
+[package]
+name = "hermesd"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+description = "Redox AIOS Hermes orchestrator daemon"
+
+[[bin]]
+name = "hermesd"
+path = "src/main.rs"
+
+[[bin]]
+name = "hermes"
+path = "src/bin/hermes.rs"
+
+[dependencies]
+hermes-core = { path = "../../hermes-core" }
+skill-registry = { path = "../../skill-registry" }
+serde = { version = "1" }
+serde_json = "1"

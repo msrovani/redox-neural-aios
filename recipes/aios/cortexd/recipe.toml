@@ -1,0 +1,6 @@
+[source]
+path = "../../../crates/daemons/cortexd"
+
+[build]
+template = "cargo"
+cargopackages = ["cortexd", "cortex"]

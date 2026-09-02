@@ -1,0 +1,16 @@
+/target/
+/vendor/
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
+
+# neural-sgdb (futuro submodule)
+/.nsgdb/
+
+# Build artifacts locais
+/tmp/
+*.log
+
+# Modelos LLM (baixar via tools/download-falcon3.ps1)
+/models/

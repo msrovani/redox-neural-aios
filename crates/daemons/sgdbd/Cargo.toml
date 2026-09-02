@@ -1,0 +1,24 @@
+[package]
+name = "sgdbd"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+description = "Redox AIOS neural-sgdb memory daemon"
+
+[lib]
+name = "sgdbd"
+path = "src/lib.rs"
+
+[[bin]]
+name = "sgdbd"
+path = "src/main.rs"
+
+[[bin]]
+name = "memory"
+path = "src/bin/memory.rs"
+
+[dependencies]
+neural-sgdb = { path = "../../../../neural-sgdb", default-features = false, features = ["std", "file-storage"] }
+memory-core = { path = "../../memory-core" }
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"

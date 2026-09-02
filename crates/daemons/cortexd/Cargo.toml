@@ -1,0 +1,19 @@
+[package]
+name = "cortexd"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+description = "Cortex LLM daemon for Redox AIOS"
+
+[[bin]]
+name = "cortexd"
+path = "src/main.rs"
+
+[[bin]]
+name = "cortex"
+path = "src/bin/cortex.rs"
+
+[dependencies]
+cortex-core = { path = "../../cortex-core" }
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"

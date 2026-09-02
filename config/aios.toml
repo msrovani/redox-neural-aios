@@ -1,0 +1,14 @@
+# Redox AIOS — configuração desktop completa
+# COSMIC + camada cognitiva AIOS
+
+include = ["aios-minimal.toml", "desktop.toml"]
+
+[general]
+filesystem_size = 2048
+
+[packages]
+# Fase 1+ (stubs — habilitar conforme implementação)
+# hermesd = {}
+# cortexd = {}
+# voiced = {}
+# jarbasd = {}

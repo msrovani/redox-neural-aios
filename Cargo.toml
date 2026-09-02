@@ -1,0 +1,30 @@
+[workspace]
+resolver = "2"
+members = [
+    "crates/agent-core",
+    "crates/event-bus",
+    "crates/memory-core",
+    "crates/skill-registry",
+    "crates/cortex-core",
+    "crates/voice-core",
+    "crates/i18n-core",
+    "crates/jarbas-core",
+    "crates/hermes-core",
+    "crates/daemons/eventd",
+    "crates/daemons/sgdbd",
+    "crates/daemons/hermesd",
+    "crates/daemons/cortexd",
+    "crates/daemons/voiced",
+    "crates/daemons/jarbasd",
+    "crates/gui/jarbas-overlay",
+]
+
+[workspace.package]
+version = "0.0.1"
+edition = "2021"
+license = "MIT"
+authors = ["Redox AIOS Contributors"]
+
+[profile.release]
+lto = true
+codegen-units = 1

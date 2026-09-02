@@ -1,0 +1,5 @@
+[source]
+path = "../../../crates/daemons/eventd"
+
+[build]
+template = "cargo"
