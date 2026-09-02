@@ -1,6 +1,7 @@
 [workspace]
 resolver = "2"
 members = [
+    "crates/wasm-skill-runtime",
     "crates/agent-core",
     "crates/event-bus",
     "crates/memory-core",

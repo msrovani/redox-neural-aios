@@ -1,9 +1,18 @@
 //! Cliente RPC para cortexd.
 
 use std::io::{BufRead, BufReader, Write};
-use std::net::TcpStream;
+use std::net::{SocketAddr, TcpStream};
+use std::time::Duration;
 
 pub const DEFAULT_CORTEX_SOCKET: &str = "127.0.0.1:7743";
+
+fn rpc_timeout() -> Duration {
+    std::env::var("REDOX_RPC_TIMEOUT_MS")
+        .ok()
+        .and_then(|v| v.parse().ok())
+        .map(Duration::from_millis)
+        .unwrap_or(Duration::from_secs(2))
+}
 
 pub struct CortexClient {
     addr: String,
@@ -26,8 +35,19 @@ impl CortexClient {
             body["system"] = serde_json::Value::String(sys.to_string());
         }
 
-        let mut stream =
-            TcpStream::connect(&self.addr).map_err(|e| format!("cortexd connect: {e}"))?;
+        let socket: SocketAddr = self
+            .addr
+            .parse()
+            .map_err(|e| format!("cortexd endereço inválido {}: {e}", self.addr))?;
+        let timeout = rpc_timeout();
+        let mut stream = TcpStream::connect_timeout(&socket, timeout)
+            .map_err(|e| format!("cortexd connect: {e}"))?;
+        stream
+            .set_read_timeout(Some(timeout))
+            .map_err(|e| e.to_string())?;
+        stream
+            .set_write_timeout(Some(timeout))
+            .map_err(|e| e.to_string())?;
         let line = serde_json::to_string(&body).map_err(|e| e.to_string())?;
         writeln!(stream, "{line}").map_err(|e| e.to_string())?;
         stream.flush().map_err(|e| e.to_string())?;

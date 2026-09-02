@@ -9,6 +9,9 @@ pub enum Command {
     Remember(String),
     Recall(String),
     Skills,
+    Factory,
+    Promote(String),
+    OpIr(String),
     Chat(String),
     Unknown(String),
 }
@@ -34,6 +37,9 @@ pub fn parse_command(line: &str) -> Command {
             "remember" => Command::Remember(arg),
             "recall" => Command::Recall(arg),
             "skills" | "show_skills" => Command::Skills,
+            "factory" => Command::Factory,
+            "promote" => Command::Promote(arg),
+            "opir" | "op-ir" => Command::OpIr(arg),
             _ => Command::Unknown(trimmed.to_string()),
         };
     }
@@ -69,6 +75,9 @@ pub fn command_to_skill(cmd: &Command) -> Option<(&'static str, String)> {
         Command::Recall(s) => Some(("recall", s.clone())),
         Command::Skills => Some(("skills", String::new())),
         Command::Help => Some(("help", String::new())),
+        Command::Factory => Some(("factory", String::new())),
+        Command::Promote(s) => Some(("promote", s.clone())),
+        Command::OpIr(s) => Some(("opir", s.clone())),
         _ => None,
     }
 }

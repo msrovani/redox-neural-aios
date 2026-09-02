@@ -22,13 +22,18 @@ A premissa AIOS (ADR-001) exige experiência Jarvis: wake word → STT → Herme
 | `voiced` | Daemon TCP `127.0.0.1:7744` |
 | `voice` | CLI cliente |
 
-### Fluxo (stub Fase 4)
+### Fluxo (Fase 4+) — integrado à escada ADR-010
 
 ```
-CLI/host text → voiced → VOICE_WAKE? → VOICE_STT
-    → hermesd:7742 → cortexd (via Hermes Chat)
-    → HERMES_RESPONSE → VOICE_TTS_START/END → [TTS stub]
+MIC/wav/text → voiced → VOICE_STT
+    → hermesd:7742 (skill_observer + ReAct ou skill/WASM)
+    → cortexd:7743 (+ tools rede futuro p/ clima, etc.)
+    → sgdbd remember (scope voice/hermes)
+    → HERMES_RESPONSE → VOICE_TTS → SPK
 ```
+
+**1ª pergunta** (ex.: "qual a temperatura?") = execução **efêmera** completa.  
+**3ª repetição** = candidato a **skill** → depois **WASM** → depois **app wasmi** ([ADR-010](ADR-010-runtime-app-factory.md)).
 
 Eventos publicados em `eventd:7740`:
 

@@ -45,7 +45,13 @@ mod tests {
 
     #[test]
     fn blocks_apt_install() {
+        let prev = std::env::var("REDOX_HERMES_HITL").ok();
+        std::env::set_var("REDOX_HERMES_HITL", "1");
         assert_eq!(gate_response("apt install foo").is_some(), true);
+        match prev {
+            Some(v) => std::env::set_var("REDOX_HERMES_HITL", v),
+            None => std::env::remove_var("REDOX_HERMES_HITL"),
+        }
     }
 
     #[test]

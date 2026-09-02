@@ -1,10 +1,30 @@
 //! Backend TCP JSON-lines (sgdbd).
 
 use std::io::{BufRead, BufReader, Write};
-use std::net::TcpStream;
+use std::net::{SocketAddr, TcpStream};
+use std::time::Duration;
+
+pub fn rpc_timeout() -> Duration {
+    std::env::var("REDOX_RPC_TIMEOUT_MS")
+        .ok()
+        .and_then(|v| v.parse().ok())
+        .map(Duration::from_millis)
+        .unwrap_or(Duration::from_secs(2))
+}
 
 pub fn rpc(addr: &str, body: serde_json::Value) -> Result<serde_json::Value, String> {
-    let mut stream = TcpStream::connect(addr).map_err(|e| format!("conectar {addr}: {e}"))?;
+    let socket: SocketAddr = addr
+        .parse()
+        .map_err(|e| format!("endereço inválido {addr}: {e}"))?;
+    let timeout = rpc_timeout();
+    let mut stream = TcpStream::connect_timeout(&socket, timeout)
+        .map_err(|e| format!("conectar {addr}: {e}"))?;
+    stream
+        .set_read_timeout(Some(timeout))
+        .map_err(|e| e.to_string())?;
+    stream
+        .set_write_timeout(Some(timeout))
+        .map_err(|e| e.to_string())?;
     let line = serde_json::to_string(&body).map_err(|e| e.to_string())?;
     writeln!(stream, "{line}").map_err(|e| e.to_string())?;
     stream.flush().map_err(|e| e.to_string())?;

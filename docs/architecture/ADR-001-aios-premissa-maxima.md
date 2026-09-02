@@ -59,7 +59,7 @@ O sistema se auto-tudo:
 - **auto-adaptar** — detecta caminho subótimo e corrige em runtime
 - **auto-curar** — SelfHeal detecta HW sem driver/skill e propõe solução
 - **auto-upgrade** — OTA com gate HITL antes de aplicar
-- **auto-gerar funcionalidades** — skills WASM on-demand via Hermes
+- **auto-gerar funcionalidades** — escada efêmera → skill → WASM → app wasmi via Hermes ([ADR-010](ADR-010-runtime-app-factory.md))
 - **auto-pesquisar soluções** — busca ativa quando bloqueado
 
 Autônomo e automático, **sem jamais degradar segurança, HITL ou confiabilidade**.

@@ -13,6 +13,10 @@
   "help.nl": "NL: free chat (Falcon3), 'what time', 'remember ...', 'recall ...'",
   "hermes.hitl.blocked": "⛔ HITL: destructive action blocked. Confirm explicitly in the terminal to proceed.",
   "hermes.hitl.high_impact": "⛔ HITL: high-impact action blocked (install/update/remote exec). Confirm in the terminal to proceed.",
+  "factory.self_test.ok": "Runtime App Factory (wasmi) — self-test OK.",
+  "factory.ladder.help": "ADR-010 ladder: ephemeral (1st–2nd) → SKILL.md (3×) → WASM (mature runs) → wasmi app (/promote approve HITL). Userspace-only; kernel untouched.",
+  "factory.promote.hitl": "Cookbook promotion requires explicit HITL (/promote <skill> approve).",
+  "factory.promote.blocked": "HITL blocked promotion to OS package.",
   "voice.empty_input": "empty input",
   "voice.barge_in.before_tts": "barge-in: speech detected before TTS",
   "voice.barge_in.during_tts": "barge-in: playback interrupted"

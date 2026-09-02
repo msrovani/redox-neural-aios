@@ -5,6 +5,7 @@ use std::net::TcpStream;
 
 pub const DEFAULT_EVENTD_SOCKET: &str = "127.0.0.1:7740";
 
+#[derive(Clone)]
 pub struct EventClient {
     addr: String,
 }

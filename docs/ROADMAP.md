@@ -149,18 +149,52 @@ Ver [ADR-004](architecture/ADR-004-jarbas-ui-strategy.md).
 
 ---
 
-### Fase 7 — Polish & release v0.1
+### Fase 7 — Runtime App Factory & release v0.1
 
 | Item | Status |
 |------|--------|
-| Boot observability (placar parseável) | ⏳ |
+| ADR-010 Runtime App Factory | ✅ |
+| `wasm-skill-runtime` (wasmi Caminho A) | ✅ |
+| `DynamicSkill` + promoção file | ✅ |
+| `skill_observer` + `self_evolve` | ✅ |
+| Skill `/factory` self-test | ✅ |
+| Geração WAT via cortexd (op-IR) | ⏳ Onda 7g |
+| Recipe wasmi overlay Redox | ⏳ Onda 7e |
+| Bridge cookbook promoção | ⏳ Onda 7f |
+| Boot observability (placar parseável) | 🟡 |
 | SelfHeal / OTA skeleton | ⏳ |
-| Benchmark latência wake→response | ⏳ |
-| Testes QEMU headless | ⏳ |
-| Redox Neural AIOS Book | ⏳ |
 | **ISO `aios-v0.1.0`** | ⏳ |
 
-**Aceite:** ISO publicável + critérios Fase 6 verdes.
+**Aceite Onda 7a–7d:** intent repetido 3× → skill WASM registrada e executável via Hermes; `/factory` verde no boot.
+
+---
+
+## Onda 7 — Runtime App Factory (skills WASM)
+
+Paralela à Fase 7, conforme [ADR-010](architecture/ADR-010-runtime-app-factory.md).
+
+| Sub-onda | Escopo | Status |
+|----------|--------|--------|
+| **7a** | `wasm-skill-runtime` + wasmi sandbox | ✅ |
+| **7b** | `DynamicSkill` hot-load | ✅ |
+| **7c** | `skill_observer` + SGDB usage (host) | ✅ |
+| **7d** | `self_evolve` + router integration | ✅ |
+| **7e** | Recipe wasmi no overlay Redox | ⏳ |
+| **7f** | Bridge cookbook (promoção HITL) | ⏳ |
+| **7g** | cortexd → WAT/op-IR | 🟡 |
+| **7h** | `skill_gen` → SKILL.md (degrau 1) | ✅ |
+| **7i** | Pipeline efêmera + tool registry (genérico) | ✅ |
+
+```text
+1ª vez: efêmera (ReAct + Cortex + SGDB + TTS)
+  → hits≥3: SKILL.md
+  → runs≥3@70%: .wasm wasmi
+  → HITL: recipe app wasmi
+```
+
+---
+
+### Fase 7 (legado polish) — itens restantes
 
 ---
 

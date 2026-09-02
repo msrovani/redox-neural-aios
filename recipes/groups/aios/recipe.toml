@@ -9,4 +9,5 @@ dependencies = [
     "voiced",
     "jarbasd",
     "jarbas-overlay",
+    "wasmi",
 ]

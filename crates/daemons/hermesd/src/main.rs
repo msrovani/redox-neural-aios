@@ -5,14 +5,11 @@ use std::io::{BufRead, BufReader, Write};
 use std::net::{TcpListener, TcpStream};
 
 use agent_core::{collect_stack_backends, lifecycle_agent_names, register_fleet};
-use hermes_core::{
-    boot_observe, event_client::EventClient, register_builtin_skills, HermesRouter,
-    DEFAULT_HERMES_SOCKET, TOPIC_HERMES_RESPONSE, TOPIC_USER_INTENT,
-};
 use event_bus::emit_boot_ai;
-use skill_registry::SkillRegistry;
-
-const VERSION: &str = env!("CARGO_PKG_VERSION");
+use hermes_core::{
+    boot_observe, boot_skill_registry, event_client::EventClient, format_boot_report, HermesRouter,
+    DEFAULT_HERMES_SOCKET, TOPIC_FACTORY_BOOT, TOPIC_HERMES_RESPONSE, TOPIC_USER_INTENT,
+};
 
 const FLEET: &[(&str, &str, Option<&str>)] = &[
     ("eventd", "system", Some("127.0.0.1:7740")),
@@ -25,6 +22,8 @@ const FLEET: &[(&str, &str, Option<&str>)] = &[
     ("sleep_cycle", "system", None),
     ("auto_learn", "skill", None),
 ];
+
+const VERSION: &str = env!("CARGO_PKG_VERSION");
 
 fn log_line(msg: &str) {
     if let Ok(mut f) = fs::OpenOptions::new()
@@ -112,10 +111,22 @@ fn handle_client(router: &HermesRouter, events: &EventClient, stream: TcpStream)
 fn main() {
     log_line(&format!("hermesd v{VERSION} — Redox AIOS Hermes orchestrator"));
 
-    let mut registry = SkillRegistry::new();
-    register_builtin_skills(&mut registry);
-    let router = HermesRouter::new(registry);
     let events = EventClient::new();
+    let (registry, boot) = boot_skill_registry();
+    log_line(&format!("[hermesd] {}", format_boot_report(&boot)));
+    let _ = events.publish(
+        TOPIC_FACTORY_BOOT,
+        &serde_json::json!({
+            "skills_md": boot.load.skill_md_loaded,
+            "skills_wasm": boot.load.wasm_loaded,
+            "skills_dir": boot.skills_dir,
+            "hitl": boot.backends.hitl_enabled,
+            "tools_net": boot.backends.tools_net,
+        })
+        .to_string(),
+    );
+
+    let router = HermesRouter::with_events(registry, events.clone());
 
     register_aios_fleet();
 
@@ -135,7 +146,13 @@ fn main() {
 
     let _ = fs::write("/tmp/hermesd.pid", std::process::id().to_string());
     log_line(&format!("[hermesd] intent socket em {bind}"));
-    log_line("[hermesd] skills: echo time status remember recall help skills | cmds: intent backends ping");
+    log_line("[hermesd] skills: echo time status remember recall help skills factory opir promote | cmds: intent backends ping");
+
+    // ADR-010 factory + op-IR self-test no boot
+    let factory = router.handle_intent("/factory");
+    log_line(&format!("[hermesd] factory self-test: {}", factory.response.lines().next().unwrap_or("")));
+    let opir = router.handle_intent("/opir a*b+7");
+    log_line(&format!("[hermesd] op-IR self-test: {}", opir.response));
 
     for stream in listener.incoming().flatten() {
         handle_client(&router, &events, stream);

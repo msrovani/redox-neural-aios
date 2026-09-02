@@ -51,6 +51,26 @@ path = "/var/lib/sgdb/.keep"
 data = ""
 
 [[files]]
+path = "/etc/aios/factory.toml"
+data = """
+# Runtime App Factory — defaults Redox Neural AIOS (ADR-010)
+skills_dir = "/var/lib/aios/skills"
+recipes_staging = "/usr/share/aios/recipes/skills-staging"
+hitl = true
+tools_net = false
+factory_caps = true
+memory_backend = "scheme"
+"""
+
+[[files]]
+path = "/usr/share/aios/recipes/skills-staging/.keep"
+data = ""
+
+[[files]]
+path = "/var/lib/aios/skills/.keep"
+data = ""
+
+[[files]]
 path = "/scheme/aios/.keep"
 data = ""
 
