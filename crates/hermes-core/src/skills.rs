@@ -1,5 +1,6 @@
 //! Skills builtin do Hermes (Fase 2).
 
+use i18n_core::t;
 use skill_registry::{Skill, SkillManifest, SkillRegistry};
 
 use crate::sgdb_client::SgdbClient;
@@ -61,11 +62,7 @@ impl Skill for HelpSkill {
         }
     }
     fn execute(&self, _input: &str) -> Result<String, String> {
-        Ok(
-            "Comandos: /help /ask /echo /time /status /remember /recall /skills\n\
-             NL: chat livre (Falcon3), 'que horas são', 'lembre ...', 'recall ...'"
-                .into(),
-        )
+        Ok(format!("{}\n{}", t("help.commands"), t("help.nl")))
     }
 }
 

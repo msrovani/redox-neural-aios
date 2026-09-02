@@ -13,15 +13,17 @@ pub enum MemoryBackend {
 }
 
 impl MemoryBackend {
-    pub fn from_env() -> Self {
-        match std::env::var("REDOX_MEMORY_BACKEND")
-            .unwrap_or_else(|_| "tcp".into())
-            .to_ascii_lowercase()
-            .as_str()
-        {
+    pub fn parse(value: &str) -> Self {
+        match value.to_ascii_lowercase().as_str() {
             "scheme" | "memory" => Self::Scheme,
             _ => Self::Tcp,
         }
+    }
+
+    pub fn from_env() -> Self {
+        std::env::var("REDOX_MEMORY_BACKEND")
+            .map(|v| Self::parse(&v))
+            .unwrap_or(Self::Tcp)
     }
 }
 
@@ -118,15 +120,10 @@ mod tests {
     use super::*;
 
     #[test]
-    fn backend_from_env_tcp_default() {
-        std::env::remove_var("REDOX_MEMORY_BACKEND");
-        assert_eq!(MemoryBackend::from_env(), MemoryBackend::Tcp);
-    }
-
-    #[test]
-    fn backend_from_env_scheme() {
-        std::env::set_var("REDOX_MEMORY_BACKEND", "scheme");
-        assert_eq!(MemoryBackend::from_env(), MemoryBackend::Scheme);
-        std::env::remove_var("REDOX_MEMORY_BACKEND");
+    fn backend_parse_defaults_and_scheme() {
+        assert_eq!(MemoryBackend::parse("tcp"), MemoryBackend::Tcp);
+        assert_eq!(MemoryBackend::parse("SCHEME"), MemoryBackend::Scheme);
+        assert_eq!(MemoryBackend::parse("memory"), MemoryBackend::Scheme);
+        assert_eq!(MemoryBackend::parse("other"), MemoryBackend::Tcp);
     }
 }

@@ -2,6 +2,9 @@
 
 use std::path::Path;
 
+use i18n_core::{t, t_fmt};
+use crate::data_collect::DataCollector;
+
 use crate::engines::audio::play_wav;
 use crate::engines::stt::{stt_from_env, SttKind};
 use crate::engines::tts::{tts_from_env, TtsKind};
@@ -26,6 +29,7 @@ pub struct VoicePipeline {
     pub tts: Box<dyn crate::engines::tts::TtsEngine>,
     pub hermes: HermesClient,
     pub events: EventClient,
+    pub collector: DataCollector,
     pub require_wake: bool,
     pub auto_play: bool,
 }
@@ -47,6 +51,7 @@ impl VoicePipeline {
             tts: tts_from_env(),
             hermes: HermesClient::new(),
             events: EventClient::new(),
+            collector: DataCollector::from_env(),
             require_wake,
             auto_play,
         }
@@ -63,13 +68,10 @@ impl VoicePipeline {
     pub fn normalize_input(&self, raw: &str) -> Result<String, String> {
         let trimmed = raw.trim();
         if trimmed.is_empty() {
-            return Err("entrada vazia".into());
+            return Err(t("voice.empty_input"));
         }
         if self.require_wake && !self.wake.detect_in_text(trimmed) {
-            return Err(format!(
-                "wake word '{}' não detectada",
-                self.wake.word
-            ));
+            return Err(t_fmt("jarbas.wake.required", &[("word", &self.wake.word)]));
         }
         if self.wake.detect_in_text(trimmed) {
             let _ = self.events.publish(TOPIC_VOICE_WAKE, &self.wake.word);
@@ -116,7 +118,7 @@ impl VoicePipeline {
 
     fn speak_response(&self, response: &str, _transcript: &str) -> Result<VoiceResult, String> {
         if crate::barge_in::vad_active() {
-            return Err("barge-in: fala do usuário detectada antes do TTS".into());
+            return Err(t("voice.barge_in.before_tts"));
         }
         let _ = self.events.publish(TOPIC_VOICE_TTS_START, response);
         let tts_out = self.tts.synthesize(response)?;
@@ -126,6 +128,7 @@ impl VoicePipeline {
                     Ok(()) => {}
                     Err(e) if e.contains("barge-in") => {
                         let _ = self.events.publish(TOPIC_VOICE_TTS_END, "barge-in");
+                        self.collector.remember_pair(_transcript, response);
                         return Ok(VoiceResult {
                             transcript: _transcript.to_string(),
                             response: response.to_string(),
@@ -137,6 +140,7 @@ impl VoicePipeline {
                 }
             }
         }
+        self.collector.remember_pair(_transcript, response);
         let _ = self.events.publish(TOPIC_VOICE_TTS_END, &tts_out.label);
         Ok(VoiceResult {
             transcript: _transcript.to_string(),

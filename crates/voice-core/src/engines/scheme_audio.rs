@@ -51,7 +51,7 @@ pub fn play_wav_scheme(path: &Path) -> Result<(), String> {
     while Instant::now() < deadline {
         if crate::barge_in::vad_active() {
             let _ = fs::write(root.join("spk").join("cancel"), "");
-            return Err("barge-in: reprodução interrompida".into());
+            return Err(i18n_core::t("voice.barge_in.during_tts"));
         }
         if done.exists() {
             let _ = fs::remove_file(&done);

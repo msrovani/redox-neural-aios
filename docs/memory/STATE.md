@@ -12,31 +12,32 @@
 |------|-------------|-----------|
 | 0 | 🟡 overlay ✅, CI ✅ | ⏳ `make aios-minimal` (WSL) |
 | 1 | 🟡 scheme bridges ✅ | ⏳ handler nativo |
-| 2 | 🟡 HITL stub ✅ | ⏳ boot score QEMU |
-| 4 | 🟡 audio bridge + barge-in stub | ⏳ MIC nativo |
-| 6 | 🟡 | ⏳ demo gravável |
+| 2 | 🟡 HITL + boot score ✅ | ⏳ QEMU |
+| 4 | 🟡 audio bridge + barge-in | ⏳ MIC nativo |
+| 5 | 🟡 i18n parcial | ⏳ liborbital |
+| 6 | ✅ demo-e2e.ps1 host | ⏳ demo gravável OS |
 
-**Próximo:** `.\tools\build-wsl.ps1` ou build Linux → demo E2E Fase 6.
+**Próximo:** WSL build → schemes nativos Redox.
 
-## Entregas desta sessão
+## Entregas recentes
 
-- [x] `scheme_audio` — bridge `/scheme/audio` (MIC/SPK/VAD)
-- [x] `barge_in` — interrupção TTS via VAD file
-- [x] `voiced` — `listen` com `"scheme": true`
-- [x] `hermes-core/hitl` — bloqueio `rm -rf` etc.
-- [x] `boot_observe` — placar `=== BOOT SCORE ===`
-- [x] `tools/verify-stack.ps1`, `tools/build-wsl.ps1`
-- [x] `.github/workflows/ci.yml`
-- [x] **29 testes** workspace verdes
+- [x] **ADR-001/002 host** — permission_gate, boot_observe+probe, BOOT_AI, backends honestos, scheme `aios:`
+- [x] **Fix sgdbd Windows** — `REDOX_SGDB_PATH` (dir) → `mem.db` para `FileStorage`
+- [x] **demo-e2e.ps1** verde no host (6 daemons + 5 passos)
+- [x] i18n em hermes (help, HITL, offline) + voice (wake, barge-in)
+- [x] `DataCollector` — pares Q/A no SGDB scope `voice`
+- [x] `tools/demo-e2e.ps1` + `tools/start-stack.ps1`
+- [x] **38 testes** workspace verdes
 
-## Verificação rápida
+## Comandos
 
 ```powershell
-.\tools\verify-stack.ps1          # testes + memory TCP + scheme
-.\tools\build-wsl.ps1             # build Redox (requer WSL)
+.\tools\verify-stack.ps1
+.\tools\demo-e2e.ps1
+.\tools\start-stack.ps1 -KeepStack   # via demo -KeepStack
 ```
 
-## Stack (host)
+## Stack
 
 | Daemon | Porta |
 |--------|-------|

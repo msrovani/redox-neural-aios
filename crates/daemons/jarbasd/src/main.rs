@@ -8,6 +8,8 @@ use std::sync::{Arc, Mutex};
 use jarbas_core::{
     render_chat_hud, ChatSession, HudFrame, JarbasBridge, SoulMirror, DEFAULT_JARBAS_SOCKET,
 };
+use agent_core::collect_stack_backends;
+use event_bus::emit_boot_ai;
 
 const VERSION: &str = env!("CARGO_PKG_VERSION");
 
@@ -40,7 +42,7 @@ fn log_line(msg: &str) {
     println!("{msg}");
 }
 
-pub fn handle_request(state: &mut JarbasState, line: &str) -> String {
+pub(crate) fn handle_request(state: &mut JarbasState, line: &str) -> String {
     let cmd: serde_json::Value = match serde_json::from_str(line) {
         Ok(v) => v,
         Err(e) => return serde_json::json!({"ok":false,"error":e.to_string()}).to_string(),
@@ -56,7 +58,13 @@ pub fn handle_request(state: &mut JarbasState, line: &str) -> String {
                 "language": state.bridge.soul.language,
                 "orb": state.mirror.emotion.label(),
                 "messages": state.session.history().len(),
+                "backends": collect_stack_backends(),
             }
+        })
+        .to_string(),
+        Some("backends") => serde_json::json!({
+            "ok": true,
+            "result": collect_stack_backends(),
         })
         .to_string(),
         Some("soul") => serde_json::json!({
@@ -182,6 +190,8 @@ fn main() {
             ));
         }
     }
+
+    emit_boot_ai("jarbasd");
 
     let bind = std::env::var("REDOX_JARBAS_SOCKET")
         .unwrap_or_else(|_| DEFAULT_JARBAS_SOCKET.to_string());

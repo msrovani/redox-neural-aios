@@ -10,21 +10,37 @@ use neural_sgdb::{
 };
 
 const DEFAULT_DB_DIR: &str = "/var/lib/sgdb";
+const DB_FILE_NAME: &str = "mem.db";
 
 pub struct SgdbService {
     db: Mutex<Sgdb>,
     db_path: String,
 }
 
+/// `REDOX_SGDB_PATH` é um diretório (ADR-005); `FileStorage` exige arquivo `.db`.
+fn resolve_storage_file(path: Option<&Path>) -> std::path::PathBuf {
+    let base = path
+        .map(std::path::Path::to_path_buf)
+        .unwrap_or_else(|| std::path::PathBuf::from(DEFAULT_DB_DIR));
+
+    if base.is_dir() || base.extension().is_none() {
+        base.join(DB_FILE_NAME)
+    } else {
+        base
+    }
+}
+
 impl SgdbService {
     pub fn open(path: Option<&Path>) -> Result<Self, String> {
-        let db_path = path
-            .map(|p| p.to_string_lossy().into_owned())
-            .unwrap_or_else(|| DEFAULT_DB_DIR.to_string());
+        let storage_path = resolve_storage_file(path);
+        if let Some(parent) = storage_path.parent() {
+            std::fs::create_dir_all(parent)
+                .map_err(|e| format!("criar {}: {e}", parent.display()))?;
+        }
 
-        std::fs::create_dir_all(&db_path).map_err(|e| format!("criar {db_path}: {e}"))?;
-
-        let storage = FileStorage::open(&db_path).map_err(|e| format!("abrir storage: {e}"))?;
+        let db_path = storage_path.to_string_lossy().into_owned();
+        let storage =
+            FileStorage::open(&storage_path).map_err(|e| format!("abrir storage: {e}"))?;
         let mut db = Sgdb::open(storage).map_err(|e| format!("abrir sgdb: {e}"))?;
 
         if db.health().doc_count == 0 {
@@ -104,6 +120,11 @@ impl SgdbService {
     pub fn health(&self) -> Result<HealthReport, String> {
         let mut db = self.db.lock().map_err(|_| "lock poisoned".to_string())?;
         Ok(db.health())
+    }
+
+    #[cfg(test)]
+    pub fn open_file_dir(base: &Path) -> Result<Self, String> {
+        Self::open(Some(base))
     }
 
     #[cfg(test)]

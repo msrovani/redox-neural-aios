@@ -32,7 +32,7 @@ impl HermesRouter {
     fn cortex_complete(&self, text: &str) -> String {
         match self.cortex.complete(text, Some(&system_prompt())) {
             Ok(r) => r,
-            Err(e) => format!("Não consegui consultar o Falcon3: {e}"),
+            Err(e) => i18n_core::t_fmt("jarbas.offline", &[("error", &e)]),
         }
     }
 

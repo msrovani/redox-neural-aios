@@ -210,6 +210,18 @@ impl AdaptiveEngine {
         Self { falcon, stub }
     }
 
+    pub fn is_degraded(&self) -> bool {
+        self.falcon.is_none()
+    }
+
+    pub fn backend_tier(&self) -> &'static str {
+        if self.falcon.is_some() {
+            "production"
+        } else {
+            "stub"
+        }
+    }
+
     pub fn engine_name(&self) -> &'static str {
         if self.falcon.is_some() {
             "falcon3-3b-1.58bit"

@@ -6,9 +6,11 @@ license.workspace = true
 description = "Hermes orchestrator core for Redox AIOS"
 
 [dependencies]
+agent-core = { path = "../agent-core" }
 skill-registry = { path = "../skill-registry" }
 cortex-core = { path = "../cortex-core" }
 memory-core = { path = "../memory-core" }
 event-bus = { path = "../event-bus" }
+i18n-core = { path = "../i18n-core" }
 serde = { version = "1", features = ["derive"] }
 serde_json = "1"

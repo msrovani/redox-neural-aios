@@ -9,6 +9,7 @@ use std::thread;
 use std::time::Duration;
 
 use sgdbd::{handle_request, service::SgdbService, DEFAULT_SOCKET};
+use event_bus::emit_boot_ai;
 
 const VERSION: &str = env!("CARGO_PKG_VERSION");
 
@@ -67,6 +68,8 @@ fn main() {
         service.db_path(),
         service.health().map(|h| h.doc_count).unwrap_or(0)
     ));
+
+    emit_boot_ai("sgdbd");
 
     let bind_addr =
         std::env::var("REDOX_SGDB_SOCKET").unwrap_or_else(|_| DEFAULT_SOCKET.to_string());

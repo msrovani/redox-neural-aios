@@ -122,7 +122,7 @@ Não pular fase. Hardening e integração QEMU vêm **antes** de features novas 
 | HUD terminal + Soul Mirror ASCII | ✅ |
 | Boot greeting Falcon3 | ✅ |
 | `i18n-core` + locales pt-BR/en-US | ✅ |
-| Integração i18n em todos os daemons | 🟡 |
+| Integração i18n em todos os daemons | 🟡 hermes + voice + jarbas HUD |
 | `jarbas-ui` liborbital (compositor) | ⏳ |
 | Chat scrollback, 5 themes | ⏳ |
 | `jarbasd --login` substitui orblogin | ⏳ (Onda B plena) |
@@ -140,9 +140,9 @@ Ver [ADR-004](architecture/ADR-004-jarbas-ui-strategy.md).
 | Wire host: voz + chat + memória | 🟡 |
 | `jarbas-overlay` (Onda B convivência) | ✅ |
 | SleepCycle / AutoLearn agents | ⏳ |
-| DataCollector intent/response → SGDB | ⏳ |
+| DataCollector intent/response → SGDB | 🟡 voice scope |
 | Cards: Terminal, Files, Weather | ⏳ |
-| Demo gravável completa | ⏳ |
+| Demo gravável completa | 🟡 `tools/demo-e2e.ps1` host |
 | `config/aios.toml` desktop completo | ⏳ |
 
 **Aceite:** demo Jarvis gravável (boot, voz, terminal card, barge-in, memória entre sessões).

@@ -9,5 +9,11 @@
   "voice.stt.stub": "STT em modo texto (instale whisper para áudio real)",
   "voice.tts.stub": "TTS em modo stub (instale piper para voz real)",
   "desktop.cosmic.coexist": "Jarbas comanda; apps COSMIC convivem no launcher",
-  "help.commands": "Comandos: /help /ask /echo /time /status /remember /recall /skills"
+  "help.commands": "Comandos: /help /ask /echo /time /status /remember /recall /skills",
+  "help.nl": "NL: chat livre (Falcon3), 'que horas são', 'lembre ...', 'recall ...'",
+  "hermes.hitl.blocked": "⛔ HITL: ação destrutiva bloqueada. Confirme explicitamente no terminal se deseja prosseguir.",
+  "hermes.hitl.high_impact": "⛔ HITL: ação de alto impacto bloqueada (instalação/update/exec remota). Confirme no terminal para prosseguir.",
+  "voice.empty_input": "entrada vazia",
+  "voice.barge_in.before_tts": "barge-in: fala detectada antes do TTS",
+  "voice.barge_in.during_tts": "barge-in: reprodução interrompida"
 }

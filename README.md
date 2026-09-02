@@ -49,8 +49,11 @@ cargo run -p cortexd --bin cortexd
 
 ```powershell
 .\tools\bootstrap.ps1
+.\tools\verify-stack.ps1      # testes + memory TCP/scheme
+.\tools\demo-e2e.ps1          # demo Jarvis host (Fase 6)
+.\tools\start-stack.ps1       # 6 daemons em background
 cd C:\DEV\redox
-make CONFIG_NAME=aios-minimal
+make CONFIG_NAME=aios-minimal   # requer WSL/Linux
 ```
 
 ## Stack cognitivo

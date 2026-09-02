@@ -51,6 +51,10 @@ path = "/var/lib/sgdb/.keep"
 data = ""
 
 [[files]]
+path = "/scheme/aios/.keep"
+data = ""
+
+[[files]]
 path = "/scheme/memory/.keep"
 data = ""
 

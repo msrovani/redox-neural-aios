@@ -4,13 +4,27 @@ use std::fs;
 use std::io::{BufRead, BufReader, Write};
 use std::net::{TcpListener, TcpStream};
 
+use agent_core::{collect_stack_backends, lifecycle_agent_names, register_fleet};
 use hermes_core::{
     boot_observe, event_client::EventClient, register_builtin_skills, HermesRouter,
     DEFAULT_HERMES_SOCKET, TOPIC_HERMES_RESPONSE, TOPIC_USER_INTENT,
 };
+use event_bus::emit_boot_ai;
 use skill_registry::SkillRegistry;
 
 const VERSION: &str = env!("CARGO_PKG_VERSION");
+
+const FLEET: &[(&str, &str, Option<&str>)] = &[
+    ("eventd", "system", Some("127.0.0.1:7740")),
+    ("sgdbd", "system", Some("127.0.0.1:7741")),
+    ("hermesd", "router", Some("127.0.0.1:7742")),
+    ("cortexd", "inference", Some("127.0.0.1:7743")),
+    ("voiced", "skill", Some("127.0.0.1:7744")),
+    ("jarbasd", "console", Some("127.0.0.1:7745")),
+    ("optimizer", "inference", None),
+    ("sleep_cycle", "system", None),
+    ("auto_learn", "skill", None),
+];
 
 fn log_line(msg: &str) {
     if let Ok(mut f) = fs::OpenOptions::new()
@@ -21,6 +35,17 @@ fn log_line(msg: &str) {
         let _ = writeln!(f, "{msg}");
     }
     println!("{msg}");
+}
+
+fn register_aios_fleet() {
+    match register_fleet(FLEET) {
+        Ok(n) => log_line(&format!("[hermesd] aios: registry {n} agentes")),
+        Err(e) => log_line(&format!("[hermesd] aios: registry WARN: {e}")),
+    }
+    log_line(&format!(
+        "[hermesd] lifecycle agents (stub): {}",
+        lifecycle_agent_names().join(", ")
+    ));
 }
 
 pub fn handle_intent_line(router: &HermesRouter, events: &EventClient, line: &str) -> String {
@@ -67,6 +92,11 @@ fn handle_client(router: &HermesRouter, events: &EventClient, stream: TcpStream)
         };
         let response = match cmd.get("cmd").and_then(|c| c.as_str()) {
             Some("ping") => serde_json::json!({"ok":true,"result":"pong"}).to_string(),
+            Some("backends") => serde_json::json!({
+                "ok": true,
+                "result": collect_stack_backends(),
+            })
+            .to_string(),
             Some("intent") => handle_intent_line(router, events, &line),
             other => {
                 serde_json::json!({"ok":false,"error":format!("cmd invalido: {other:?}")}).to_string()
@@ -87,10 +117,14 @@ fn main() {
     let router = HermesRouter::new(registry);
     let events = EventClient::new();
 
+    register_aios_fleet();
+
     match boot_observe::boot_observe_and_remember() {
         Ok(ev) => log_line(&format!("[hermesd] boot_observe OK: {ev}")),
         Err(e) => log_line(&format!("[hermesd] boot_observe WARN: {e}")),
     }
+
+    emit_boot_ai("hermesd");
 
     let bind = std::env::var("REDOX_HERMES_SOCKET")
         .unwrap_or_else(|_| DEFAULT_HERMES_SOCKET.to_string());
@@ -101,7 +135,7 @@ fn main() {
 
     let _ = fs::write("/tmp/hermesd.pid", std::process::id().to_string());
     log_line(&format!("[hermesd] intent socket em {bind}"));
-    log_line("[hermesd] skills: echo time status remember recall help skills");
+    log_line("[hermesd] skills: echo time status remember recall help skills | cmds: intent backends ping");
 
     for stream in listener.incoming().flatten() {
         handle_client(&router, &events, stream);

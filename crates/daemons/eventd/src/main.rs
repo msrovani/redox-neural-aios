@@ -8,7 +8,7 @@ use std::thread;
 use std::time::Duration;
 
 use agent_core::{Agent, AgentKind, AgentManifest, AgentTickResult, ScheduleKind};
-use event_bus::{handle_remote, CapabilityToken, Event, EventBus};
+use event_bus::{emit_boot_ai, handle_remote, CapabilityToken, Event, EventBus};
 
 const VERSION: &str = env!("CARGO_PKG_VERSION");
 const CONTROL_ADDR: &str = "127.0.0.1:7740";
@@ -107,6 +107,7 @@ fn main() {
     log_line(&format!("eventd v{VERSION} — Redox AIOS EventBus"));
     let bus = Arc::new(EventBus::new());
     EventdAgent::emit_boot_phases(&bus);
+    emit_boot_ai("eventd");
     let _ = fs::write("/tmp/eventd.pid", std::process::id().to_string());
     listen_control_port(bus.clone());
 

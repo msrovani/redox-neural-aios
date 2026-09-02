@@ -14,6 +14,8 @@ name = "hermes"
 path = "src/bin/hermes.rs"
 
 [dependencies]
+agent-core = { path = "../../agent-core" }
+event-bus = { path = "../../event-bus" }
 hermes-core = { path = "../../hermes-core" }
 skill-registry = { path = "../../skill-registry" }
 serde = { version = "1" }

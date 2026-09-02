@@ -6,6 +6,7 @@ use std::net::{TcpListener, TcpStream};
 use std::path::PathBuf;
 use std::sync::Arc;
 
+use event_bus::emit_boot_ai;
 use voice_core::{SttKind, TtsKind, VoicePipeline, DEFAULT_VOICE_SOCKET};
 
 const VERSION: &str = env!("CARGO_PKG_VERSION");
@@ -43,18 +44,31 @@ pub fn handle_request(pipeline: &VoicePipeline, line: &str) -> String {
 
     match cmd.get("cmd").and_then(|c| c.as_str()) {
         Some("ping") => serde_json::json!({"ok":true,"result":"pong"}).to_string(),
-        Some("status") => serde_json::json!({
-            "ok": true,
-            "result": {
-                "stt": stt_label(pipeline.stt_kind()),
-                "tts": tts_label(pipeline.tts_kind()),
-                "wake_word": pipeline.wake.word,
-                "require_wake": pipeline.require_wake,
-                "auto_play": pipeline.auto_play,
-                "hermes": voice_core::DEFAULT_HERMES_SOCKET,
-            }
-        })
-        .to_string(),
+        Some("status") => {
+            let stt_tier = match pipeline.stt_kind() {
+                SttKind::Stub => "stub",
+                SttKind::Whisper => "production",
+            };
+            let tts_tier = match pipeline.tts_kind() {
+                TtsKind::Stub => "stub",
+                TtsKind::Piper => "production",
+            };
+            serde_json::json!({
+                "ok": true,
+                "result": {
+                    "stt": stt_label(pipeline.stt_kind()),
+                    "stt_tier": stt_tier,
+                    "tts": tts_label(pipeline.tts_kind()),
+                    "tts_tier": tts_tier,
+                    "degraded": matches!(pipeline.stt_kind(), SttKind::Stub) || matches!(pipeline.tts_kind(), TtsKind::Stub),
+                    "wake_word": pipeline.wake.word,
+                    "require_wake": pipeline.require_wake,
+                    "auto_play": pipeline.auto_play,
+                    "hermes": voice_core::DEFAULT_HERMES_SOCKET,
+                }
+            })
+            .to_string()
+        }
         Some("transcribe") => {
             let wav = cmd
                 .get("wav")
@@ -169,11 +183,13 @@ fn main() {
 
     let _ = fs::write("/tmp/voiced.pid", std::process::id().to_string());
     log_line(&format!(
-        "[voiced] socket={bind} stt={} tts={} wake='{}'",
+        "[voiced] socket={bind} stt={} tts={} wake='{}' degraded={}",
         stt_label(pipeline.stt_kind()),
         tts_label(pipeline.tts_kind()),
-        pipeline.wake.word
+        pipeline.wake.word,
+        matches!(pipeline.stt_kind(), SttKind::Stub) || matches!(pipeline.tts_kind(), TtsKind::Stub)
     ));
+    emit_boot_ai("voiced");
     log_line("[voiced] cmds: listen | transcribe | utterance | say | status | ping");
 
     for stream in listener.incoming().flatten() {

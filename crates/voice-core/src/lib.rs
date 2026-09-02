@@ -1,6 +1,7 @@
 //! Voice pipeline — wake → STT → Hermes → TTS (Redox AIOS).
 
 pub mod barge_in;
+pub mod data_collect;
 pub mod engines;
 pub mod event_client;
 pub mod hermes_client;
@@ -8,6 +9,7 @@ pub mod pipeline;
 pub mod stub;
 
 pub use barge_in::{barge_in_enabled, request_cancel, vad_active};
+pub use data_collect::DataCollector;
 pub use engines::{
     capture_wav_scheme, play_wav, stt_from_env, tts_from_env, audio_scheme_enabled, SttKind,
     TtsKind, TtsOutput,

@@ -6,6 +6,7 @@ use std::net::{TcpListener, TcpStream};
 use std::sync::Arc;
 
 use cortex_core::{engine_from_env, CortexEngine, DEFAULT_CORTEX_SOCKET};
+use event_bus::emit_boot_ai;
 
 const VERSION: &str = env!("CARGO_PKG_VERSION");
 
@@ -32,6 +33,8 @@ pub fn handle_request(engine: &cortex_core::AdaptiveEngine, line: &str) -> Strin
             "ok": true,
             "result": {
                 "engine": engine.engine_name(),
+                "tier": engine.backend_tier(),
+                "degraded": engine.is_degraded(),
                 "model": std::env::var("REDOX_CORTEX_MODEL").unwrap_or_else(|_| "default".into()),
             }
         })
@@ -72,10 +75,13 @@ fn main() {
 
     let engine = Arc::new(engine_from_env());
     log_line(&format!(
-        "[cortexd] engine={} model_env={}",
+        "[cortexd] engine={} tier={} degraded={}",
         engine.engine_name(),
-        std::env::var("REDOX_CORTEX_MODEL").unwrap_or_else(|_| "(default path)".into())
+        engine.backend_tier(),
+        engine.is_degraded()
     ));
+
+    emit_boot_ai("cortexd");
 
     let bind = std::env::var("REDOX_CORTEX_SOCKET")
         .unwrap_or_else(|_| DEFAULT_CORTEX_SOCKET.to_string());

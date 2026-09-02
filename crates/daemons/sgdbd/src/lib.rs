@@ -71,6 +71,31 @@ mod tests {
     use crate::service::SgdbService;
 
     #[test]
+    fn remember_recall_roundtrip_file_storage() {
+        let dir = std::env::temp_dir().join("redox-sgdb-test-dir");
+        let _ = std::fs::remove_dir_all(&dir);
+        std::fs::create_dir_all(&dir).expect("mkdir");
+
+        let svc = SgdbService::open_file_dir(&dir).expect("open dir");
+        assert!(svc.db_path().ends_with("mem.db"));
+
+        let remember = handle_request(
+            &svc,
+            r#"{"cmd":"remember","text":"file storage ok","scope":"boot"}"#,
+        );
+        assert!(remember.contains("\"ok\":true"), "{remember}");
+
+        let svc2 = SgdbService::open_file_dir(&dir).expect("reopen");
+        let recall = handle_request(
+            &svc2,
+            r#"{"cmd":"recall","query":"file storage","scope":"boot","k":3}"#,
+        );
+        assert!(recall.contains("file storage ok"), "{recall}");
+
+        let _ = std::fs::remove_dir_all(&dir);
+    }
+
+    #[test]
     fn remember_recall_roundtrip() {
         let svc = SgdbService::open_in_memory().expect("open");
 

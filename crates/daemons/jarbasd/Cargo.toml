@@ -15,5 +15,7 @@ path = "src/bin/jarbas.rs"
 
 [dependencies]
 jarbas-core = { path = "../../jarbas-core" }
+agent-core = { path = "../../agent-core" }
+event-bus = { path = "../../event-bus" }
 serde = { version = "1", features = ["derive"] }
 serde_json = "1"
