@@ -18,7 +18,7 @@
 | 6 | ✅ demo-e2e.ps1 host | ⏳ demo gravável OS |
 | 7 | 🟡 Onda 7 + Fase 2 factory | ⏳ QEMU escada gravável |
 
-**Próximo:** caps OS nativas + QEMU E2E gravável.
+**Próximo:** MCP server + QEMU E2E gravável.
 
 ## Adesão neural-os-core (ADR-011)
 
@@ -28,8 +28,10 @@
 - [x] Boot hermesd roda SelfHeal
 - [x] Loop poll periódico (`REDOX_LIFECYCLE_POLL_SECS`)
 - [x] OTA skeleton HITL (`/ota`)
-- [ ] Caps OS nativas
-- [ ] Trinity MoE / MCP
+- [x] Caps OS scheme `aios:/caps` + `/caps`
+- [x] Trinity MoE skeleton (`REDOX_CORTEX_MOE`)
+- [ ] MCP server
+- [ ] Caps kernel Redox
 
 ## Fase 2b (URI bridge)
 

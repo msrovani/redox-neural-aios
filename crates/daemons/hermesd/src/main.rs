@@ -144,6 +144,15 @@ fn main() {
         log_line(&format!("[hermesd] self_heal boot:\n{heal}"));
     }
 
+    match agent_core::bootstrap_caps() {
+        Ok(store) => log_line(&format!(
+            "[hermesd] caps bootstrap source={} grants=[{}]",
+            store.source,
+            store.grant_names().join(",")
+        )),
+        Err(e) => log_line(&format!("[hermesd] caps bootstrap WARN: {e}")),
+    }
+
     emit_boot_ai("hermesd");
 
     let _poll_stop = lifecycle_poll::spawn_lifecycle_poll(events.clone(), |msg| log_line(msg));

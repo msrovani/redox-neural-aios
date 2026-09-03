@@ -30,8 +30,8 @@ A adesão **não copia** o monólito bare-metal. Porta conceitos AIOS para users
 | AutoLearn | `AutoLearnAgent` | ✅ userspace |
 | Optimizer | `OptimizerAgent` | ✅ userspace |
 | Boot observe | `boot_observe` + SelfHeal no boot | 🟡 |
-| Trust tokens / CapGate | `scheme_caps` + HITL | 🟡 env CSV |
-| Trinity MoE | cortexd | ⏳ |
+| Trust tokens / CapGate | `scheme_caps` + `aios:/caps` | 🟡 scheme bridge |
+| Trinity MoE | cortexd `trinity` | 🟡 skeleton |
 | MCP server | — | ⏳ |
 | PackageHub | cookbook_bridge | 🟡 |
 | SelfHeal PCI/firmware | — | ❌ N/A (kernel Redox) |
@@ -60,8 +60,10 @@ A adesão **não copia** o monólito bare-metal. Porta conceitos AIOS para users
 - [x] `/lifecycle` `/selfheal` no router
 - [x] Tick periódico lifecycle no daemon (`REDOX_LIFECYCLE_POLL_SECS`)
 - [x] OTA skeleton HITL (`/ota check|approve`)
-- [ ] Caps nativas OS
-- [ ] Trinity MoE / MCP
+- [x] Caps OS scheme `aios:/caps` + `/caps`
+- [x] Trinity MoE skeleton (`REDOX_CORTEX_MOE`)
+- [ ] MCP server
+- [ ] Caps kernel Redox nativas
 
 ## Apreciação ADR-001
 

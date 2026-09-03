@@ -21,7 +21,7 @@ use crate::workflow::execute_skill_workflow;
 
 const BUILTIN_SKILLS: &[&str] = &[
     "echo", "time", "status", "remember", "recall", "skills", "help", "factory", "promote",
-    "opir", "tools", "evolve", "lifecycle", "selfheal", "ota",
+    "opir", "tools", "evolve", "lifecycle", "selfheal", "ota", "caps",
 ];
 
 pub struct HermesRouter {
@@ -320,6 +320,17 @@ impl HermesRouter {
                 }
                 if skill == "ota" {
                     let out = crate::ota_cmd::handle_ota(&input, &self.sgdb, &self.events);
+                    return self.finish_skill(
+                        text,
+                        skill,
+                        out,
+                        &mut registry,
+                        &mut trace,
+                        &mut lines,
+                    );
+                }
+                if skill == "caps" {
+                    let out = crate::caps_cmd::handle_caps(&input, &self.sgdb, &self.events);
                     return self.finish_skill(
                         text,
                         skill,

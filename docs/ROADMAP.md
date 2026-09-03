@@ -73,8 +73,8 @@ Não pular fase. Hardening e integração QEMU vêm **antes** de features novas 
 | Intent routing → cortexd | ✅ |
 | Boot observer stub → SGDB | 🟡 |
 | HITL gate destrutivo | 🟡 stub |
+| `permission_gate` via capabilities | 🟡 `aios:/caps` + `REDOX_AIOS_CAPS` |
 | MCP server | ⏳ |
-| `permission_gate` via capabilities | 🟡 `scheme_caps` + `REDOX_AIOS_CAPS` (host) |
 
 **Aceite:** intent texto → skill ou LLM; ação destrutiva bloqueada com HITL.
 
@@ -89,7 +89,7 @@ Não pular fase. Hardening e integração QEMU vêm **antes** de features novas 
 | BitNet 1.58bit (`-Lite`) | ✅ |
 | Hermes Chat → cortexd | ✅ |
 | Inferência no QEMU | ⏳ |
-| Trinity MoE skeleton | ⏳ |
+| Trinity MoE skeleton | 🟡 `cortex-core/trinity` |
 | Lazy load no boot | 🟡 |
 
 **Aceite:** prompt PT-BR coerente no ambiente alvo (< 30s QEMU ou host documentado).

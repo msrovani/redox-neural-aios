@@ -233,11 +233,27 @@ impl AdaptiveEngine {
 
 impl CortexEngine for AdaptiveEngine {
     fn complete(&self, prompt: &str, system: Option<&str>) -> Result<String, String> {
-        if let Some(falcon) = &self.falcon {
-            falcon.complete(prompt, system)
+        let plan = crate::trinity::route_intent(prompt);
+        let annotated_system = if plan.moe_enabled {
+            let tag = plan.format();
+            Some(match system {
+                Some(s) => format!("{s}\n[{tag}]"),
+                None => format!("[{tag}]"),
+            })
         } else {
-            self.stub.complete(prompt, system)
+            None
+        };
+        let system = annotated_system.as_deref().or(system);
+
+        let mut out = if let Some(falcon) = &self.falcon {
+            falcon.complete(prompt, system)?
+        } else {
+            self.stub.complete(prompt, system)?
+        };
+        if plan.moe_enabled {
+            out = format!("[{}] {out}", plan.primary.expert.as_str());
         }
+        Ok(out)
     }
 }
 

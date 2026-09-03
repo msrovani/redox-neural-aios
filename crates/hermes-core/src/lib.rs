@@ -12,6 +12,7 @@ pub mod hitl;
 pub mod intent;
 pub mod lifecycle_runner;
 pub mod ota_cmd;
+pub mod caps_cmd;
 pub mod prompt;pub mod react;
 pub mod router;
 pub mod self_evolve;

@@ -1,5 +1,7 @@
-//! CapGate ↔ scheme capabilities Redox (ADR-001 Fase 2).
-//! Mapeia bitmask WASM (`wasm-skill-runtime`) para schemes OS e grants de env.
+//! CapGate ↔ scheme capabilities Redox (ADR-001 Fase 2 / ADR-011).
+//! Grants: scheme `aios:/caps` → env `REDOX_AIOS_CAPS` → default seguro.
+
+use crate::os_caps::{cached_grants, grant_active_os, refresh_caps_cache};
 
 /// Schemes Redox usados pela factory (userspace).
 pub const SCHEME_MEMORY: &str = "memory:";
@@ -49,21 +51,20 @@ pub fn cap_catalog() -> &'static [SchemeCapGrant] {
     ]
 }
 
-/// Grants ativos via `REDOX_AIOS_CAPS` (CSV) ou defaults seguros.
+/// Grants ativos: cache scheme/env (ADR-011 caps OS).
 pub fn active_grants() -> Vec<String> {
-    std::env::var("REDOX_AIOS_CAPS")
-        .map(|v| {
-            v.split(',')
-                .map(|s| s.trim().to_ascii_lowercase())
-                .filter(|s| !s.is_empty())
-                .collect()
-        })
-        .unwrap_or_else(|_| vec!["factory_exec".into()])
+    let mut grants = cached_grants();
+    if grants.is_empty() {
+        grants = refresh_caps_cache().grant_names();
+    }
+    if grants.is_empty() {
+        return vec![GRANT_FACTORY.into()];
+    }
+    grants
 }
 
 pub fn grant_active(name: &str) -> bool {
-    let key = name.to_ascii_lowercase();
-    active_grants().iter().any(|g| g == &key)
+    grant_active_os(name)
 }
 
 /// Bitmask WASM efetiva a partir de grants (CapGate).
@@ -104,8 +105,13 @@ pub fn allows_pkg_install(hitl_approved: bool) -> bool {
 }
 
 pub fn cap_summary() -> String {
-    let grants = active_grants().join(",");
-    format!("grants=[{grants}] wasm_caps=0x{:x}", wasm_caps_from_grants())
+    let store = refresh_caps_cache();
+    format!(
+        "source={} grants=[{}] wasm_caps=0x{:x}",
+        store.source,
+        store.grant_names().join(","),
+        wasm_caps_from_grants()
+    )
 }
 
 #[cfg(test)]
@@ -115,11 +121,21 @@ mod tests {
     #[test]
     fn wasm_caps_include_log_by_default() {
         let prev = std::env::var("REDOX_AIOS_CAPS").ok();
+        let prev_root = std::env::var("REDOX_AIOS_CAPS_ROOT").ok();
+        let root = std::env::temp_dir().join("redox-aios-caps-default-test");
+        let _ = std::fs::remove_dir_all(&root);
+        std::env::set_var("REDOX_AIOS_CAPS_ROOT", &root);
         std::env::remove_var("REDOX_AIOS_CAPS");
+        let _ = crate::os_caps::bootstrap_caps();
         assert!(wasm_caps_from_grants() & CAP_LOG_BIT != 0);
         match prev {
             Some(v) => std::env::set_var("REDOX_AIOS_CAPS", v),
-            None => {}
+            None => std::env::remove_var("REDOX_AIOS_CAPS"),
         }
+        match prev_root {
+            Some(v) => std::env::set_var("REDOX_AIOS_CAPS_ROOT", v),
+            None => std::env::remove_var("REDOX_AIOS_CAPS_ROOT"),
+        }
+        let _ = std::fs::remove_dir_all(root);
     }
 }

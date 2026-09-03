@@ -15,6 +15,7 @@ pub enum Command {
     Lifecycle,
     SelfHeal,
     Ota(String),
+    Caps(String),
     Chat(String),
     Unknown(String),
 }
@@ -46,6 +47,7 @@ pub fn parse_command(line: &str) -> Command {
             "lifecycle" | "agents" => Command::Lifecycle,
             "selfheal" | "self_heal" | "heal" => Command::SelfHeal,
             "ota" => Command::Ota(arg),
+            "caps" | "cap" | "capabilities" => Command::Caps(arg),
             _ => Command::Unknown(trimmed.to_string()),
         };
     }
@@ -87,6 +89,7 @@ pub fn command_to_skill(cmd: &Command) -> Option<(&'static str, String)> {
         Command::Lifecycle => Some(("lifecycle", String::new())),
         Command::SelfHeal => Some(("selfheal", String::new())),
         Command::Ota(s) => Some(("ota", s.clone())),
+        Command::Caps(s) => Some(("caps", s.clone())),
         _ => None,
     }
 }
