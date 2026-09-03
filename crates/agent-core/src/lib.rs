@@ -4,13 +4,20 @@
 pub mod aios_registry;
 pub mod backend;
 pub mod lifecycle;
+pub mod ota;
 pub mod permission_gate;
 pub mod scheme_caps;
+pub mod self_heal;
 pub mod types;
 
 pub use aios_registry::{register_agent, register_fleet, AgentRegistration};
 pub use backend::{collect_stack_backends, probe_tcp, BackendReport, BackendTier};
-pub use lifecycle::{lifecycle_agent_names, AutoLearnAgent, OptimizerAgent, SleepCycleAgent};
+pub use lifecycle::{
+    lifecycle_agent_names, AutoLearnAgent, LifecycleTick, OptimizerAgent, SelfHealAgent,
+    SleepCycleAgent,
+};
+pub use ota::{apply_update, check_update, OtaChannel, OtaProposal};
+pub use self_heal::{scan_stack, HealIssue, HealReport, HealSeverity};
 pub use permission_gate::{
     gate_enabled, impact_level, missing_pkg_grant, missing_scheme_grant, requires_hitl,
     required_grant, ImpactLevel,

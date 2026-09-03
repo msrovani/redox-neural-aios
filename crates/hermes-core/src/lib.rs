@@ -10,8 +10,9 @@ pub mod factory_boot;
 pub mod factory_cycle;
 pub mod hitl;
 pub mod intent;
-pub mod prompt;
-pub mod react;
+pub mod lifecycle_runner;
+pub mod ota_cmd;
+pub mod prompt;pub mod react;
 pub mod router;
 pub mod self_evolve;
 pub mod sgdb_client;
@@ -33,7 +34,11 @@ pub const TOPIC_HERMES_RESPONSE: &str = "HERMES_RESPONSE";
 pub const TOPIC_FACTORY_STAGE: &str = "FACTORY_STAGE";
 pub const TOPIC_FACTORY_REMEMBER: &str = "FACTORY_REMEMBER";
 pub const TOPIC_FACTORY_BOOT: &str = "FACTORY_BOOT";
+pub const TOPIC_LIFECYCLE: &str = "LIFECYCLE_TICK";
+pub const TOPIC_HEALTH_ISSUE: &str = "HEALTH_ISSUE";
 pub const DEFAULT_HERMES_SOCKET: &str = "127.0.0.1:7742";
+
+pub use lifecycle_runner::{run_lifecycle_cycle, run_self_heal};
 
 #[cfg(test)]
 mod tests {

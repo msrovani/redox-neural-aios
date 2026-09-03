@@ -12,6 +12,9 @@ pub enum Command {
     Factory,
     Promote(String),
     OpIr(String),
+    Lifecycle,
+    SelfHeal,
+    Ota(String),
     Chat(String),
     Unknown(String),
 }
@@ -40,6 +43,9 @@ pub fn parse_command(line: &str) -> Command {
             "factory" => Command::Factory,
             "promote" => Command::Promote(arg),
             "opir" | "op-ir" => Command::OpIr(arg),
+            "lifecycle" | "agents" => Command::Lifecycle,
+            "selfheal" | "self_heal" | "heal" => Command::SelfHeal,
+            "ota" => Command::Ota(arg),
             _ => Command::Unknown(trimmed.to_string()),
         };
     }
@@ -78,6 +84,9 @@ pub fn command_to_skill(cmd: &Command) -> Option<(&'static str, String)> {
         Command::Factory => Some(("factory", String::new())),
         Command::Promote(s) => Some(("promote", s.clone())),
         Command::OpIr(s) => Some(("opir", s.clone())),
+        Command::Lifecycle => Some(("lifecycle", String::new())),
+        Command::SelfHeal => Some(("selfheal", String::new())),
+        Command::Ota(s) => Some(("ota", s.clone())),
         _ => None,
     }
 }

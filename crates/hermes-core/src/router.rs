@@ -21,7 +21,7 @@ use crate::workflow::execute_skill_workflow;
 
 const BUILTIN_SKILLS: &[&str] = &[
     "echo", "time", "status", "remember", "recall", "skills", "help", "factory", "promote",
-    "opir", "tools", "evolve",
+    "opir", "tools", "evolve", "lifecycle", "selfheal", "ota",
 ];
 
 pub struct HermesRouter {
@@ -296,6 +296,39 @@ impl HermesRouter {
             if is_known {
                 trace.advance(format!("execute skill={skill}"));
                 lines.push(trace.line());
+                if skill == "lifecycle" {
+                    let out = crate::lifecycle_runner::run_lifecycle_cycle(&self.sgdb, &self.events);
+                    return self.finish_skill(
+                        text,
+                        skill,
+                        Ok(out),
+                        &mut registry,
+                        &mut trace,
+                        &mut lines,
+                    );
+                }
+                if skill == "selfheal" {
+                    let out = crate::lifecycle_runner::run_self_heal(&self.sgdb, &self.events);
+                    return self.finish_skill(
+                        text,
+                        skill,
+                        Ok(out),
+                        &mut registry,
+                        &mut trace,
+                        &mut lines,
+                    );
+                }
+                if skill == "ota" {
+                    let out = crate::ota_cmd::handle_ota(&input, &self.sgdb, &self.events);
+                    return self.finish_skill(
+                        text,
+                        skill,
+                        out,
+                        &mut registry,
+                        &mut trace,
+                        &mut lines,
+                    );
+                }
                 if skill == "tools" {
                     let tools = self.tools.lock().expect("tools");
                     let list: Vec<String> = tools

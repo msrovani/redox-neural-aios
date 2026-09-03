@@ -18,7 +18,18 @@
 | 6 | ✅ demo-e2e.ps1 host | ⏳ demo gravável OS |
 | 7 | 🟡 Onda 7 + Fase 2 factory | ⏳ QEMU escada gravável |
 
-**Próximo:** handler `open()` kernel Redox + QEMU E2E gravável.
+**Próximo:** caps OS nativas + QEMU E2E gravável.
+
+## Adesão neural-os-core (ADR-011)
+
+- [x] Matriz de paridade ADR-011
+- [x] SelfHeal userspace + `/selfheal`
+- [x] SleepCycle / AutoLearn / Optimizer reais + `/lifecycle`
+- [x] Boot hermesd roda SelfHeal
+- [x] Loop poll periódico (`REDOX_LIFECYCLE_POLL_SECS`)
+- [x] OTA skeleton HITL (`/ota`)
+- [ ] Caps OS nativas
+- [ ] Trinity MoE / MCP
 
 ## Fase 2b (URI bridge)
 
@@ -42,6 +53,7 @@ Exemplo *"qual a temperatura?"*: efêmera (1ª) → skill (3×) → wasm (runs m
 
 ## Entregas recentes
 
+- [x] **Adesão NOC lifecycle** — SelfHeal, SleepCycle, AutoLearn, Optimizer + ADR-011
 - [x] **Fase 2 factory** — scheme URI/native prep, `scheme_caps`, cookbook pkgutils, `demo-qemu.ps1`
 - [x] **Factory AIOS-aligned** — boot reload skills, ciclo O-P-A-V-R, eventos FACTORY_*, i18n, caps WASM
 - [x] **Onda 7i** — pipeline efêmero + tool registry + providers HTTP (`REDOX_TOOLS_PROVIDERS`)

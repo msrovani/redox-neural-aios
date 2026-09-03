@@ -93,8 +93,11 @@ CLI/voz → hermesd:7742 → HermesRouter
 - [x] self_evolve + skill_observer integrados
 - [x] HITL gate (permission_gate)
 - [x] cortexd para `Command::Chat`
-- [ ] `skill_gen` → SKILL.md (7h)
-- [ ] Tool rede clima (7i)
+- [x] `skill_gen` → SKILL.md (7h)
+- [x] Tool rede clima (7i, opt-in)
+- [x] Lifecycle `/lifecycle` `/selfheal` (ADR-011)
+- [x] Tick periódico lifecycle no daemon
+- [x] OTA skeleton `/ota`
 - [ ] HITL approval UI
 
 ## Apreciação ADR-001

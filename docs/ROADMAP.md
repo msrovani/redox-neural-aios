@@ -139,8 +139,9 @@ Ver [ADR-004](architecture/ADR-004-jarbas-ui-strategy.md).
 |------|--------|
 | Wire host: voz + chat + memória | 🟡 |
 | `jarbas-overlay` (Onda B convivência) | ✅ |
-| SleepCycle / AutoLearn agents | ⏳ |
+| SleepCycle / AutoLearn agents | ✅ userspace (`/lifecycle`) |
 | DataCollector intent/response → SGDB | 🟡 voice scope |
+| SelfHeal userspace | ✅ `/selfheal` + boot hermesd |
 | Cards: Terminal, Files, Weather | ⏳ |
 | Demo gravável completa | 🟡 `tools/demo-e2e.ps1` host |
 | `config/aios.toml` desktop completo | ⏳ |
@@ -162,7 +163,7 @@ Ver [ADR-004](architecture/ADR-004-jarbas-ui-strategy.md).
 | Recipe wasmi overlay Redox | 🟡 template + staging |
 | Bridge cookbook promoção | 🟡 HITL + `REDOX_COOKBOOK_BUILD=1` |
 | Boot observability (placar parseável) | 🟡 |
-| SelfHeal / OTA skeleton | ⏳ |
+| SelfHeal / OTA skeleton | ✅ SelfHeal + OTA HITL skeleton |
 | **ISO `aios-v0.1.0`** | ⏳ |
 
 **Aceite Onda 7a–7d:** intent repetido 3× → skill WASM registrada e executável via Hermes; `/factory` verde no boot.
@@ -236,10 +237,10 @@ Ciclo transversal — hardening contínuo a partir da Fase 2:
 
 | Etapa | Componente | Status |
 |-------|------------|--------|
-| Observe | `boot-observer` | 🟡 stub |
+| Observe | `boot-observer` + SelfHeal | 🟡 |
 | Plan | `hermesd` + `cortexd` | 🟡 |
 | Act | daemons Redox | ⏳ |
-| Verify | boot score parseável | ⏳ |
+| Verify | boot score + `/selfheal` | 🟡 |
 | Remember | `sgdbd` | ✅ |
 
 ---

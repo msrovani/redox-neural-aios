@@ -1,5 +1,7 @@
 //! hermesd — orquestrador Hermes Redox AIOS.
 
+mod lifecycle_poll;
+
 use std::fs;
 use std::io::{BufRead, BufReader, Write};
 use std::net::{TcpListener, TcpStream};
@@ -21,6 +23,7 @@ const FLEET: &[(&str, &str, Option<&str>)] = &[
     ("optimizer", "inference", None),
     ("sleep_cycle", "system", None),
     ("auto_learn", "skill", None),
+    ("self_heal", "system", None),
 ];
 
 const VERSION: &str = env!("CARGO_PKG_VERSION");
@@ -42,7 +45,7 @@ fn register_aios_fleet() {
         Err(e) => log_line(&format!("[hermesd] aios: registry WARN: {e}")),
     }
     log_line(&format!(
-        "[hermesd] lifecycle agents (stub): {}",
+        "[hermesd] lifecycle agents: {}",
         lifecycle_agent_names().join(", ")
     ));
 }
@@ -135,7 +138,15 @@ fn main() {
         Err(e) => log_line(&format!("[hermesd] boot_observe WARN: {e}")),
     }
 
+    {
+        let sgdb = hermes_core::sgdb_client::SgdbClient::new();
+        let heal = hermes_core::run_self_heal(&sgdb, &events);
+        log_line(&format!("[hermesd] self_heal boot:\n{heal}"));
+    }
+
     emit_boot_ai("hermesd");
+
+    let _poll_stop = lifecycle_poll::spawn_lifecycle_poll(events.clone(), |msg| log_line(msg));
 
     let bind = std::env::var("REDOX_HERMES_SOCKET")
         .unwrap_or_else(|_| DEFAULT_HERMES_SOCKET.to_string());
@@ -146,11 +157,13 @@ fn main() {
 
     let _ = fs::write("/tmp/hermesd.pid", std::process::id().to_string());
     log_line(&format!("[hermesd] intent socket em {bind}"));
-    log_line("[hermesd] skills: echo time status remember recall help skills factory opir promote | cmds: intent backends ping");
+    log_line("[hermesd] skills: echo time status remember recall help skills factory opir promote lifecycle selfheal ota | cmds: intent backends ping");
 
-    // ADR-010 factory + op-IR self-test no boot
     let factory = router.handle_intent("/factory");
-    log_line(&format!("[hermesd] factory self-test: {}", factory.response.lines().next().unwrap_or("")));
+    log_line(&format!(
+        "[hermesd] factory self-test: {}",
+        factory.response.lines().next().unwrap_or("")
+    ));
     let opir = router.handle_intent("/opir a*b+7");
     log_line(&format!("[hermesd] op-IR self-test: {}", opir.response));
 

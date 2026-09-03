@@ -28,5 +28,6 @@ Status canônico no corpo: `Proposed | Accepted | Rejected | Superseded`.
 | `ADR-003-voice-pipeline-jarvis.md` | Accepted | `fazendo` | #003 | Fase 4 |
 | `ADR-009-decisoes-produto.md` | Accepted | `completa` | #009 | v0.1 (invariantes) |
 | `ADR-010-runtime-app-factory.md` | Accepted | `fazendo` | #010 | Escada efêmera→skill→wasm→app |
+| `ADR-011-neural-os-core-adhesion.md` | Accepted | `fazendo` | #013 | Matriz de adesão + lifecycle |
 | [ROADMAP.md](../ROADMAP.md) | — | `fazendo` | #010 | Fases 0→7 |
 | ADR-008 (planejada) | — | `por_fazer` | #008 | Fase 0/7 |

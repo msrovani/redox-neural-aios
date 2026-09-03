@@ -76,7 +76,7 @@ impl Skill for SkillsListSkill {
         }
     }
     fn execute(&self, _input: &str) -> Result<String, String> {
-        Ok("echo, time, status, remember, recall, help, skills, factory, opir, promote, tools, evolve (+ dynamic)".into())
+        Ok("echo, time, status, remember, recall, help, skills, factory, opir, promote, tools, evolve, lifecycle, selfheal, ota (+ dynamic)".into())
     }
 }
 

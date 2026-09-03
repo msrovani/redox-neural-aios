@@ -15,4 +15,5 @@ Catálogo de ideias. Toda ideia tem destino conhecido. **Sprint = fase do [ROADM
 | #008 | Sync strategy upstream Redox | ⏳ | ADR-008 (planejada) | Fase 0/7 | `tools/sync-upstream.ps1` |
 | #009 | Decisões produto v0.1 | ✅ | ADR-009 | v0.1 | `ADR-009-*`, `ROADMAP.md` |
 | #012 | Integração Jarvis E2E + ISO v0.1 | ⏳ | ROADMAP Fase 6–7 | Fase 6–7 | — |
+| #013 | Adesão neural-os-core lifecycle | 🟡 | ADR-011 | Fase 6–7 | SelfHeal, SleepCycle, AutoLearn, Optimizer |
 | #011 | Desktop polish Tiers 1–4 (Onda C) | ⏳ | ADR-004 Onda C | pós-v0.1 | — |
