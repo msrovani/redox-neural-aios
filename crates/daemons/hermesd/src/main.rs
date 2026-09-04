@@ -20,6 +20,7 @@ const FLEET: &[(&str, &str, Option<&str>)] = &[
     ("cortexd", "inference", Some("127.0.0.1:7743")),
     ("voiced", "skill", Some("127.0.0.1:7744")),
     ("jarbasd", "console", Some("127.0.0.1:7745")),
+    ("mcpd", "system", Some("127.0.0.1:7746")),
     ("optimizer", "inference", None),
     ("sleep_cycle", "system", None),
     ("auto_learn", "skill", None),

@@ -1,0 +1,13 @@
+{
+  "mcpServers": {
+    "redox-aios": {
+      "command": "cargo",
+      "args": ["run", "-q", "-p", "mcpd", "--bin", "mcpd"],
+      "cwd": "C:/DEV/redox-aios",
+      "env": {
+        "REDOX_SGDB_SOCKET": "127.0.0.1:7741",
+        "REDOX_HERMES_SOCKET": "127.0.0.1:7742"
+      }
+    }
+  }
+}

@@ -32,7 +32,7 @@ A adesão **não copia** o monólito bare-metal. Porta conceitos AIOS para users
 | Boot observe | `boot_observe` + SelfHeal no boot | 🟡 |
 | Trust tokens / CapGate | `scheme_caps` + `aios:/caps` + `redox_caps` | 🟡 namespace userspace |
 | Trinity MoE | cortexd `trinity` | 🟡 skeleton |
-| MCP server | — | ⏳ |
+| MCP server | `mcpd` stdio/TCP shim | ✅ |
 | PackageHub | cookbook_bridge | 🟡 |
 | SelfHeal PCI/firmware | — | ❌ N/A (kernel Redox) |
 | Cranelift JIT skills | AWAITING_ISOLATION | ❌ gated |
@@ -63,7 +63,7 @@ A adesão **não copia** o monólito bare-metal. Porta conceitos AIOS para users
 - [x] Caps OS scheme `aios:/caps` + `/caps`
 - [x] Trinity MoE skeleton (`REDOX_CORTEX_MOE`)
 - [x] Caps kernel Redox (userspace namespace) — `redox_caps` + `/caps ns|probe` + prep `REDOX_NSMGR_FD`
-- [ ] MCP server
+- [x] MCP server (`mcpd` stdio + TCP opcional :7746)
 - [ ] Caps nativas via nsmgr FD (kernel/runtime)
 
 ## Apreciação ADR-001

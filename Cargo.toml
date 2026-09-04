@@ -17,6 +17,7 @@ members = [
     "crates/daemons/cortexd",
     "crates/daemons/voiced",
     "crates/daemons/jarbasd",
+    "crates/daemons/mcpd",
     "crates/gui/jarbas-overlay",
 ]
 

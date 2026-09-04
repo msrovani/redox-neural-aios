@@ -74,7 +74,7 @@ Não pular fase. Hardening e integração QEMU vêm **antes** de features novas 
 | Boot observer stub → SGDB | 🟡 |
 | HITL gate destrutivo | 🟡 stub |
 | `permission_gate` via capabilities | 🟡 `aios:/caps` + `REDOX_AIOS_CAPS` |
-| MCP server | ⏳ |
+| MCP server | ✅ `mcpd` |
 
 **Aceite:** intent texto → skill ou LLM; ação destrutiva bloqueada com HITL.
 

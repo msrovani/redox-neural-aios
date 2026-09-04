@@ -18,7 +18,7 @@
 | 6 | ✅ demo-e2e.ps1 host | ⏳ demo gravável OS |
 | 7 | 🟡 Onda 7 + Fase 2 factory | ⏳ QEMU escada gravável |
 
-**Próximo:** MCP server + QEMU E2E gravável (nsmgr FD quando disponível).
+**Próximo:** QEMU E2E gravável + nsmgr FD quando disponível.
 
 ## Adesão neural-os-core (ADR-011)
 
@@ -31,7 +31,7 @@
 - [x] Caps OS scheme `aios:/caps` + `/caps`
 - [x] Trinity MoE skeleton (`REDOX_CORTEX_MOE`)
 - [x] Caps kernel Redox userspace (`redox_caps` + `/caps ns|probe`)
-- [ ] MCP server
+- [x] MCP server (`mcpd`)
 - [ ] Caps nativas nsmgr FD
 
 ## Fase 2b (URI bridge)
@@ -56,6 +56,7 @@ Exemplo *"qual a temperatura?"*: efêmera (1ª) → skill (3×) → wasm (runs m
 
 ## Entregas recentes
 
+- [x] **MCP server** — `mcpd` stdio/TCP shim (docs/MCP.md)
 - [x] **Caps kernel Redox (userspace)** — `redox_caps` + `/caps ns|probe` + boot hermesd
 - [x] **Adesão NOC lifecycle** — SelfHeal, SleepCycle, AutoLearn, Optimizer + ADR-011
 - [x] **Fase 2 factory** — scheme URI/native prep, `scheme_caps`, cookbook pkgutils, `demo-qemu.ps1`
@@ -90,3 +91,4 @@ Exemplo *"qual a temperatura?"*: efêmera (1ª) → skill (3×) → wasm (runs m
 | cortexd | 7743 |
 | voiced | 7744 |
 | jarbasd | 7745 |
+| mcpd (TCP opt.) | 7746 |

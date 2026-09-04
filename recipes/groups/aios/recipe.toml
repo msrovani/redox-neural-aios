@@ -8,6 +8,7 @@ dependencies = [
     "cortexd",
     "voiced",
     "jarbasd",
+    "mcpd",
     "jarbas-overlay",
     "wasmi",
 ]

@@ -1,0 +1,6 @@
+[source]
+path = "../../../crates/daemons/mcpd"
+
+[build]
+template = "cargo"
+cargopackages = ["mcpd"]

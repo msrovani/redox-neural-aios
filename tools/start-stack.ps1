@@ -23,6 +23,7 @@ $jobs = @(
     @{ Name = "voiced";  Bin = "voiced" },
     @{ Name = "jarbasd"; Bin = "jarbasd" }
 )
+# mcpd é stdio (Cursor); para TCP no host: cargo run -p mcpd -- --tcp
 
 Write-Host "Iniciando stack AIOS (SGDB=$SgdbPath)..." -ForegroundColor Cyan
 $started = @()
