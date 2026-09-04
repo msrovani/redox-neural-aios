@@ -20,6 +20,23 @@ Gera `docs/memory/evidence/qemu-e2e-<stamp>.md` com:
 
 Suite completa opcional: `-FullCargoTest` (chama `verify-stack.ps1`).
 
+## QEMU no Windows (sem WSL)
+
+QEMU 11+ em `C:\Program Files\qemu\` (pode nao estar no PATH):
+
+```powershell
+# Smoke: descompacta livedisk em Downloads e sobe 20s
+.\tools\qemu-win.ps1 -Livedisk -SmallLivedisk -SmokeSeconds 20
+
+# Interativo (janela + serial)
+.\tools\qemu-win.ps1 -Livedisk
+
+# Imagem AIOS buildada
+.\tools\qemu-win.ps1 -Image C:\DEV\redox\build\x86_64\desktop\harddrive.img
+```
+
+Requer `pip install zstandard` para `.iso.zst`. Livedisks oficiais em Downloads nao incluem AIOS — so validam o hypervisor.
+
 ## Guest (quando ISO + QEMU)
 
 1. WSL2 + [Podman build Redox](https://doc.redox-os.org/book/podman-build.html)

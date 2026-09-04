@@ -186,10 +186,14 @@ Write-Log (($mcpOut | Out-String).TrimEnd())
 $stepsOk.mcp = (($mcpOut | Out-String) -match "redox-aios")
 if (-not $stepsOk.mcp) { throw "mcp initialize falhou" }
 
-Write-Log "`n[6] Instrucoes guest QEMU" "Yellow"
-Write-Log "Quando WSL/ISO estiver pronto:" "DarkGray"
-Write-Log "  cd $RedoxRoot" "DarkGray"
-Write-Log "  make qemu" "DarkGray"
+Write-Log "`n[6] QEMU Windows / guest" "Yellow"
+$qemuWin = Join-Path $AiosRoot "tools\qemu-win.ps1"
+if (Test-Path $qemuWin) {
+    Write-Log "QEMU nativo: .\tools\qemu-win.ps1 -Livedisk" "DarkGray"
+    Write-Log "Smoke:     .\tools\qemu-win.ps1 -Livedisk -SmallLivedisk -SmokeSeconds 20" "DarkGray"
+}
+Write-Log "AIOS guest (precisa ISO aios-minimal via WSL build):" "DarkGray"
+Write-Log "  make qemu  OU  .\tools\qemu-win.ps1 -Image <harddrive.img>" "DarkGray"
 Write-Log "  sh /usr/share/aios/qemu-guest-check.sh" "DarkGray"
 
 if (-not $SkipRecord) {
