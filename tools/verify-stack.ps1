@@ -4,7 +4,8 @@ $AiosRoot = Split-Path -Parent $PSScriptRoot
 Set-Location $AiosRoot
 
 Write-Host "=== verify-stack: cargo test ===" -ForegroundColor Cyan
-cargo test --workspace
+# --% evita que o PowerShell coma o `--` dos args do test harness
+cargo --% test --workspace -j 1 -- --test-threads=1
 if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
 
 Write-Host "`n=== verify-stack: scheme memory (TCP) ===" -ForegroundColor Cyan

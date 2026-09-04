@@ -240,8 +240,12 @@ mod tests {
     #[test]
     fn roundtrip_save_load() {
         let root = std::env::temp_dir().join(format!(
-            "redox-aios-caps-test-{}",
-            std::process::id()
+            "redox-aios-caps-test-{}-{}",
+            std::process::id(),
+            std::time::SystemTime::now()
+                .duration_since(std::time::UNIX_EPOCH)
+                .map(|d| d.as_nanos())
+                .unwrap_or(0)
         ));
         let _ = fs::remove_dir_all(&root);
         fs::create_dir_all(&root).expect("mkdir");
@@ -250,8 +254,9 @@ mod tests {
 
         let mut store = CapStore::default();
         store.upsert(GRANT_HITL, SCHEME_AIOS, true);
-        save_cap_store(&store).expect("save");
-        let loaded = load_from_file(&grants_path()).expect("load");
+        let saved = save_cap_store(&store).expect("save");
+        assert!(saved.is_file(), "grants.json missing at {}", saved.display());
+        let loaded = load_from_file(&saved).expect("load");
         assert!(loaded.has(GRANT_HITL));
         assert!(loaded.has(GRANT_FACTORY));
 

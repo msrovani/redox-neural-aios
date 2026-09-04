@@ -15,10 +15,10 @@
 | 2 | 🟡 HITL + CapGate grants CSV | ⏳ caps nativas OS |
 | 4 | 🟡 audio bridge + barge-in | ⏳ MIC nativo |
 | 5 | 🟡 i18n parcial | ⏳ liborbital |
-| 6 | ✅ demo-e2e.ps1 host | ⏳ demo gravável OS |
-| 7 | 🟡 Onda 7 + Fase 2 factory | ⏳ QEMU escada gravável |
+| 6 | ✅ demo-e2e.ps1 host | 🟡 host evidence; guest ⏳ WSL |
+| 7 | 🟡 Onda 7 + Fase 2 factory | 🟡 QEMU escada host gravável |
 
-**Próximo:** QEMU E2E gravável + nsmgr FD quando disponível.
+**Próximo:** Guest QEMU real (WSL + `make qemu`) · nsmgr FD.
 
 ## Adesão neural-os-core (ADR-011)
 
@@ -56,6 +56,7 @@ Exemplo *"qual a temperatura?"*: efêmera (1ª) → skill (3×) → wasm (runs m
 
 ## Entregas recentes
 
+- [x] **QEMU E2E host gravável** — `demo-qemu.ps1 -HostOnly` → `docs/memory/evidence/`
 - [x] **MCP server** — `mcpd` stdio/TCP shim (docs/MCP.md)
 - [x] **Caps kernel Redox (userspace)** — `redox_caps` + `/caps ns|probe` + boot hermesd
 - [x] **Adesão NOC lifecycle** — SelfHeal, SleepCycle, AutoLearn, Optimizer + ADR-011

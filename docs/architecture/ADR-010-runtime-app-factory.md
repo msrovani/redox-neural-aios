@@ -264,8 +264,9 @@ jarbasd → voiced:7744 → hermesd:7742 → [escada acima] → voiced TTS → j
 - [x] CapGate → `scheme_caps` + `REDOX_AIOS_CAPS` + `permission_gate`
 - [x] Cookbook `pkgutils_build_command` + grupo `aios-skills-staging`
 - [x] `demo-qemu.ps1 -FullLadder` + guest `/promote list`
+- [x] QEMU E2E escada **host** gravável (`-HostOnly` → evidence/)
 - [ ] Handler scheme `memory:` open() kernel
-- [ ] QEMU E2E escada gravável
+- [ ] QEMU E2E escada **guest** (WSL + `make qemu` + qemu-guest-check)
 
 ### Variáveis — pipeline efêmero (7i)
 

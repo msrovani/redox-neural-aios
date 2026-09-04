@@ -341,7 +341,14 @@ mod tests {
 
     #[test]
     fn namespace_includes_memory_when_granted() {
-        let root = std::env::temp_dir().join(format!("redox-ns-{}", std::process::id()));
+        let root = std::env::temp_dir().join(format!(
+            "redox-ns-{}-{}",
+            std::process::id(),
+            std::time::SystemTime::now()
+                .duration_since(std::time::UNIX_EPOCH)
+                .map(|d| d.as_nanos())
+                .unwrap_or(0)
+        ));
         let _ = fs::remove_dir_all(&root);
         fs::create_dir_all(&root).unwrap();
         std::env::set_var("REDOX_AIOS_CAPS_ROOT", &root);

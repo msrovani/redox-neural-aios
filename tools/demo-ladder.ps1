@@ -1,4 +1,4 @@
-# Demo escada cognitiva ADR-010 (Onda 7i) — host.
+﻿# Demo escada cognitiva ADR-010 (Onda 7i) — host.
 # Exemplo de usabilidade: mesma intent 3× → SKILL.md; providers HTTP opcionais.
 param(
     [string]$Intent = "qual a temperatura em sp",
@@ -57,4 +57,4 @@ if ($FullLadder) {
 }
 
 Write-Host "`n=== Demo escada concluída ===" -ForegroundColor Green
-Write-Host "Próximo: /promote <skill> approve (REDOX_AIOS_CAPS=pkg_install); QEMU: .\tools\demo-qemu.ps1"
+Write-Host "Proximo: /promote SKILL approve (REDOX_AIOS_CAPS=pkg_install); QEMU: .\tools\demo-qemu.ps1"

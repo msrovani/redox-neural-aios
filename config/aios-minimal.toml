@@ -76,16 +76,20 @@ export REDOX_MEMORY_SCHEME_ROOT=/scheme/memory
 export REDOX_MEMORY_SCHEME_NATIVE=1
 export REDOX_OS_TARGET=1
 export REDOX_AIOS_CAPS=factory_exec,memory_recall,hitl_approve
-memory remember \"qemu boot ok\" --scope boot
+export REDOX_AIOS_CAPS_ROOT=/scheme/aios/caps
+export REDOX_CAP_ROLE=hermes
+grep -i \"Redox Neural AIOS\" /usr/lib/os-release
+memory remember \"qemu guest boot ok\" --scope boot
 memory recall \"qemu\" --scope boot
 memory health || true
 hermes \"/factory\" || true
-hermes \"demo one\" || true
-hermes \"demo two\" || true
-hermes \"demo three\" || true
+hermes \"demo intent one\" || true
+hermes \"demo intent two\" || true
+hermes \"demo intent three\" || true
 hermes \"/evolve\" || true
 hermes \"/promote list\" || true
-grep -i \"Redox Neural AIOS\" /usr/lib/os-release
+hermes \"/caps list\" || true
+hermes \"/caps probe\" || true
 echo qemu-guest-check-ok
 """
 
