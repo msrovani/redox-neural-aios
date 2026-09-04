@@ -99,6 +99,9 @@ fn install_host_abi(linker: &mut Linker<HostState>) -> Result<(), WasmError> {
             "net_fetch",
             |caller: wasmi::Caller<'_, HostState>, _ptr: i32, _len: i32| -> Result<i32, Error> {
                 check_cap(caller.data(), CAP_NET)?;
+                if !agent_core::grant_active("net_fetch") {
+                    return Err(Error::new("aios::net_fetch: grant net_fetch ausente no CapGate"));
+                }
                 Err(Error::new("aios::net_fetch gated — use host tools (REDOX_TOOLS_NET)"))
             },
         )
@@ -110,6 +113,9 @@ fn install_host_abi(linker: &mut Linker<HostState>) -> Result<(), WasmError> {
             "fs_read",
             |caller: wasmi::Caller<'_, HostState>, path_ptr: i32, path_len: i32| -> Result<i32, Error> {
                 check_cap(caller.data(), CAP_FS)?;
+                if !agent_core::grant_active("fs_read") {
+                    return Err(Error::new("aios::fs_read: grant fs_read ausente no CapGate"));
+                }
                 let path = read_wasm_str(&caller, path_ptr, path_len)?;
                 let meta = std::fs::metadata(&path).map_err(|e| Error::new(e.to_string()))?;
                 if !meta.is_file() {

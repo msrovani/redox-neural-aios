@@ -98,6 +98,7 @@ export REDOX_MEMORY_SCHEME_NATIVE=1
 export REDOX_OS_TARGET=1
 export REDOX_AIOS_CAPS=factory_exec,memory_recall
 export REDOX_AIOS_CAPS_ROOT=/scheme/aios/caps
+export REDOX_CAP_ROLE=hermes
 export REDOX_SKILLS_DIR=/var/lib/aios/skills
 export REDOX_RECIPES_STAGING=/usr/share/aios/recipes/skills-staging
 export REDOX_CORTEX_MOE=0
@@ -130,6 +131,10 @@ data = ""
 
 [[files]]
 path = "/scheme/aios/caps/.keep"
+data = ""
+
+[[files]]
+path = "/scheme/aios/caps/ns/.keep"
 data = ""
 
 [[files]]

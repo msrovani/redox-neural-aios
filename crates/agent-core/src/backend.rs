@@ -51,7 +51,32 @@ pub fn collect_stack_backends() -> Vec<BackendReport> {
     reports.push(cortex_backend());
     reports.push(voice_stt_backend());
     reports.push(voice_tts_backend());
+    reports.push(caps_backend());
     reports
+}
+
+fn caps_backend() -> BackendReport {
+    let backend = crate::redox_caps::CapBackend::detect();
+    let summary = crate::redox_caps_summary();
+    let (tier, detail) = match backend {
+        crate::redox_caps::CapBackend::NsmgrFd => (
+            BackendTier::Production,
+            format!("nsmgr FD ativo; {summary}"),
+        ),
+        crate::redox_caps::CapBackend::SchemeProbe => (
+            BackendTier::Degraded,
+            format!("scheme probe (prep nsmgr); {summary}"),
+        ),
+        crate::redox_caps::CapBackend::ProfileBridge => (
+            BackendTier::Degraded,
+            format!("profile bridge userspace; {summary}"),
+        ),
+    };
+    BackendReport {
+        component: "caps".into(),
+        tier,
+        detail,
+    }
 }
 
 fn memory_backend() -> BackendReport {
@@ -169,5 +194,6 @@ mod tests {
     fn collect_includes_memory() {
         let reports = collect_stack_backends();
         assert!(reports.iter().any(|r| r.component == "memory"));
+        assert!(reports.iter().any(|r| r.component == "caps"));
     }
 }

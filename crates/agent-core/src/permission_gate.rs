@@ -1,7 +1,9 @@
 //! permission_gate — classificação HITL por impacto (ADR-001 mandamento 2).
 //! Integrado com `scheme_caps` — grants via `REDOX_AIOS_CAPS`.
 
-use crate::scheme_caps::{grant_active, GRANT_FACTORY, GRANT_HITL, GRANT_PKG_INSTALL};#[derive(Clone, Copy, Debug, PartialEq, Eq, PartialOrd, Ord)]
+use crate::scheme_caps::{grant_active, GRANT_FACTORY, GRANT_HITL, GRANT_PKG_INSTALL};
+
+#[derive(Clone, Copy, Debug, PartialEq, Eq, PartialOrd, Ord)]
 pub enum ImpactLevel {
     Low,
     Medium,

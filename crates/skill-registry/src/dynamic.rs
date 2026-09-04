@@ -131,7 +131,12 @@ impl DynamicSkill {
 
     pub fn execute(&self, input: &str) -> Result<String, String> {
         if let Some(wasm) = &self.wasm {
-            let caps = agent_core::wasm_caps_from_grants();
+            let caps = {
+                let store = agent_core::load_cap_store();
+                let ns = agent_core::build_namespace("wasm_skill", &store);
+                agent_core::redox_caps::wasm_caps_from_namespace(&ns)
+                    | agent_core::wasm_caps_from_grants()
+            };
             let out = run_i32_0(wasm, &self.export_fn, caps)
                 .map_err(|e| format!("wasm skill {}: {}", self.name, e.0))?;
             return Ok(format!(

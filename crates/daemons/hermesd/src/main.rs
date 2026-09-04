@@ -153,6 +153,17 @@ fn main() {
         Err(e) => log_line(&format!("[hermesd] caps bootstrap WARN: {e}")),
     }
 
+    match agent_core::bootstrap_redox_ns() {
+        Ok(ns) => log_line(&format!(
+            "[hermesd] redox ns role={} backend={} schemes=[{}] {}",
+            ns.role,
+            ns.backend,
+            ns.schemes.join(","),
+            agent_core::redox_caps_summary()
+        )),
+        Err(e) => log_line(&format!("[hermesd] redox ns WARN: {e}")),
+    }
+
     emit_boot_ai("hermesd");
 
     let _poll_stop = lifecycle_poll::spawn_lifecycle_poll(events.clone(), |msg| log_line(msg));
@@ -166,7 +177,7 @@ fn main() {
 
     let _ = fs::write("/tmp/hermesd.pid", std::process::id().to_string());
     log_line(&format!("[hermesd] intent socket em {bind}"));
-    log_line("[hermesd] skills: echo time status remember recall help skills factory opir promote lifecycle selfheal ota | cmds: intent backends ping");
+    log_line("[hermesd] skills: echo time status remember recall help skills factory opir promote lifecycle selfheal ota caps | cmds: intent backends ping");
 
     let factory = router.handle_intent("/factory");
     log_line(&format!(

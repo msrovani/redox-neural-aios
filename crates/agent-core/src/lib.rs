@@ -7,6 +7,7 @@ pub mod lifecycle;
 pub mod os_caps;
 pub mod ota;
 pub mod permission_gate;
+pub mod redox_caps;
 pub mod scheme_caps;
 pub mod self_heal;
 pub mod types;
@@ -22,6 +23,10 @@ pub use os_caps::{
     CapToken,
 };
 pub use ota::{apply_update, check_update, OtaChannel, OtaProposal};
+pub use redox_caps::{
+    bootstrap_redox_ns, build_namespace, probe_namespace, redox_caps_summary, scheme_allowed,
+    CapBackend, NamespaceProfile, SchemeProbe,
+};
 pub use self_heal::{scan_stack, HealIssue, HealReport, HealSeverity};
 pub use permission_gate::{
     gate_enabled, impact_level, missing_pkg_grant, missing_scheme_grant, requires_hitl,

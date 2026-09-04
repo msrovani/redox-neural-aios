@@ -30,7 +30,7 @@ A adesão **não copia** o monólito bare-metal. Porta conceitos AIOS para users
 | AutoLearn | `AutoLearnAgent` | ✅ userspace |
 | Optimizer | `OptimizerAgent` | ✅ userspace |
 | Boot observe | `boot_observe` + SelfHeal no boot | 🟡 |
-| Trust tokens / CapGate | `scheme_caps` + `aios:/caps` | 🟡 scheme bridge |
+| Trust tokens / CapGate | `scheme_caps` + `aios:/caps` + `redox_caps` | 🟡 namespace userspace |
 | Trinity MoE | cortexd `trinity` | 🟡 skeleton |
 | MCP server | — | ⏳ |
 | PackageHub | cookbook_bridge | 🟡 |
@@ -62,9 +62,10 @@ A adesão **não copia** o monólito bare-metal. Porta conceitos AIOS para users
 - [x] OTA skeleton HITL (`/ota check|approve`)
 - [x] Caps OS scheme `aios:/caps` + `/caps`
 - [x] Trinity MoE skeleton (`REDOX_CORTEX_MOE`)
+- [x] Caps kernel Redox (userspace namespace) — `redox_caps` + `/caps ns|probe` + prep `REDOX_NSMGR_FD`
 - [ ] MCP server
-- [ ] Caps kernel Redox nativas
+- [ ] Caps nativas via nsmgr FD (kernel/runtime)
 
 ## Apreciação ADR-001
 
-Materializa mandamento 2 (auto-curar, auto-adaptar, auto-aprender) e mandamento 3 (caminho cognitivo) sem tocar no kernel Redox.
+Materializa mandamento 2 (auto-curar, auto-adaptar, auto-aprender) e mandamento 3 (caminho cognitivo) sem tocar no kernel Redox. CapGate espelha o modelo de namespace de schemes do Redox em userspace até existir FD nsmgr.
